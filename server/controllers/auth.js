@@ -15,11 +15,24 @@ const register = async (req, res) => {
         picturePath
     })
     const savedUser = await newUser.save()
-    const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
-    res.status(201).json(savedUser, token)
+    
+    res.status(201).json({user:savedUser, token})
   } catch (err) {
     res.status(500).json({message:err.message})
   }
 };
 
-module.exports = register
+const login = async(req,res) =>{
+    const {email, password} = req.body
+    const foundUser = await userModel.find({email:email})
+    if(!foundUser)res.status(400).json({message:'User not found'})
+
+    const isMatch = await bcrypt.compare(password, foundUser.password)
+    if(!isMatch) res.status(400).json({message:'Incorrect Password'})
+    const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
+    delete foundUser.password
+    res.status(200).json({foundUser, token})
+
+}
+
+module.exports = register, login
