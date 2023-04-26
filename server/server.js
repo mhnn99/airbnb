@@ -7,8 +7,11 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 const {MONGO_URL,PORT} = process.env
-const register  = require('./controllers/auth')
-const login = require('./controllers/auth')
+const authFunc = require('./controllers/auth')
+
+const {register, login} = authFunc;
+
+
 if (!MONGO_URL) {
     console.error("Missing MONGO_URL environment variable");
     process.exit(1);
@@ -16,7 +19,7 @@ if (!MONGO_URL) {
 
 mongoose.connect(MONGO_URL)
 
-app.post('/api/register',register)
-app.post('/api/login', login)
+app.post('/auth/register',register)
+app.post('/auth/login', login)
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))
 
