@@ -5,6 +5,7 @@ const cors = require('cors')
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({extended:false}))
 const {MONGO_URL,PORT} = process.env
 const register  = require('./controllers/auth')
 if (!MONGO_URL) {
@@ -14,4 +15,6 @@ if (!MONGO_URL) {
 
 mongoose.connect(MONGO_URL)
 
-app.post('/api/register
+app.post('/api/register',register)
+app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))
+

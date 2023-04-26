@@ -1,8 +1,8 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import userModel from "../models/userModel";
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const userModel = require('../models/userModel')
 
-export const register = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password, picturePath } = req.body;
     const salt = await bcrypt.genSalt()
@@ -15,8 +15,11 @@ export const register = async (req, res) => {
         picturePath
     })
     const savedUser = await newUser.save()
-    res.status(201).json(savedUser)
+    const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
+    res.status(201).json(savedUser, token)
   } catch (err) {
     res.status(500).json({message:err.message})
   }
 };
+
+module.exports = register
