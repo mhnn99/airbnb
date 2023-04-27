@@ -16,7 +16,7 @@ const register = async (req, res) => {
     })
     const savedUser = await newUser.save()
     
-    res.status(201).json({user:savedUser, token})
+    res.status(201).json({savedUser})
   } catch (err) {
     res.status(500).json({message:err.message})
   }
@@ -36,8 +36,6 @@ const login = async(req,res) =>{
   } catch (err) {
     res.status(500).json({message:err.message})
   }
-    
-
 }
 
 module.exports = {register, login}
