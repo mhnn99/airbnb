@@ -3,12 +3,17 @@ import { Box, Grid, TextField, Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import TabPanel from "@mui/lab/TabPanel";
 import { Formik } from "formik";
 import * as yup from "yup";
+import {useNavigate} from 'react-router-dom'
+import {useDispatch} from 'react-redux'
+import { setLogin } from "../../state";
+
 
 const Form = () => {
   const [value, setValue] = useState(0);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   console.log(value);
   function a11yProps(index) {
     return {
@@ -50,8 +55,8 @@ const Form = () => {
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
   });
   const loginSchema = yup.object().shape({
-    login_email: yup.string().email("Invalid Email").required("required"),
-    login_password: yup.string().required("required"),
+    email: yup.string().email("Invalid Email").required("required"),
+    password: yup.string().required("required"),
   });
   const initialValuesRegister = {
     firstName: "",
@@ -62,8 +67,8 @@ const Form = () => {
   };
 
   const initialValuesLogin = {
-    login_email: "",
-    login_password: "",
+    email: "",
+    password: "",
   };
   const register = async(values, onSubmitProps) =>{
     const copy = {...values}
@@ -79,11 +84,23 @@ const Form = () => {
     }
     onSubmitProps.resetForm()
   }
-  const login = async(values,onSubmitProps) =>{}
-  const handleFormSubmit = async (values, onSubmitProps) => {
-    if(value===1) await login(values,onSubmitProps)
-    else await register(values,onSubmitProps)
-  };
+  const login = async(values,onSubmitProps) =>{
+    console.log(values)
+    const savedUserResponse = await fetch('http://localhost:9000/auth/login',{
+      method:'POST',
+      body:JSON.stringify(values),
+      headers:{'Content-type': 'application/json; charset=UTF-8'}
+    })
+    const res = await savedUserResponse.json()
+    console.log(res)
+    if(res){
+      dispatch(setLogin({
+        user:res.foundUser,
+        token:res.token
+      }))
+      navigate('/')
+    }
+  }
 
   return (
     <Box sx={{ p: 2, maxWidth: "sm", marginLeft: "auto", marginRight: "auto" }}>
@@ -99,7 +116,7 @@ const Form = () => {
       </Box>
       <TabPanel value={value} index={0}>
         <Formik
-          onSubmit={handleFormSubmit}
+          onSubmit={register}
           initialValues={initialValuesRegister}
           validationSchema={registerSchema}
         >
@@ -204,7 +221,7 @@ const Form = () => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Formik
-        onSubmit={handleFormSubmit}
+        onSubmit={login}
         initialValues={initialValuesLogin}
         validationSchema={loginSchema}>
            {({
@@ -216,43 +233,41 @@ const Form = () => {
             handleSubmit,
             setFieldValue,
             resetForm,
-          }) => (<form>
+          }) => (<form onSubmit={handleSubmit}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  id="outlined-basic"
                   label="Email"
                   variant="outlined"
-                  name="login_email"
+                  name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.login_email}
                     error={
-                      Boolean(touched.login_email) && Boolean(errors.login_email)
+                      Boolean(touched.email) && Boolean(errors.email)
                     }
-                    helperText={touched.login_email && errors.login_email}
+                    helperText={touched.email && errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  id="outlined-basic"
                   label="Password"
                   variant="outlined"
                   type="password"
-                  name="login_password"
+                  name="password"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.login_password}
+                    value={values.password}
                     error={
-                      Boolean(touched.login_password) && Boolean(errors.login_password)
+                      Boolean(touched.password) && Boolean(errors.password)
                     }
-                    helperText={touched.login_password && errors.login_password}
+                    helperText={touched.password && errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button variant="contained" color="primary" fullWidth>
+                <Button variant="contained" color="primary" type='submit'fullWidth>
                   Log In
                 </Button>
               </Grid>
