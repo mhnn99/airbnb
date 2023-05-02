@@ -46,11 +46,12 @@ const Form = () => {
     lastName: yup.string().required("required"),
     email: yup.string().email("Invalid Email").required("required"),
     password: yup.string().required("required"),
-    confirmPassword: yup.string().required("required"),
+    confirmPassword: yup.string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
   });
   const loginSchema = yup.object().shape({
-    email: yup.string().email("Invalid Email").required("required"),
-    password: yup.string().required("required"),
+    login_email: yup.string().email("Invalid Email").required("required"),
+    login_password: yup.string().required("required"),
   });
   const initialValuesRegister = {
     firstName: "",
@@ -61,10 +62,29 @@ const Form = () => {
   };
 
   const initialValuesLogin = {
-    email: "",
-    password: "",
+    login_email: "",
+    login_password: "",
   };
-  const handleFormSubmit = async (values, onSubmitProps) => {};
+  const register = async(values, onSubmitProps) =>{
+    const copy = {...values}
+    delete copy.confirmPassword
+    const savedUserResponse = await fetch('http://localhost:9000/auth/register',{
+      method:'POST',
+      body:JSON.stringify({...copy,picturePath:''}),
+      headers:{'Content-type': 'application/json; charset=UTF-8'}
+    })
+    const res = await savedUserResponse.json()
+    if(res){
+    setValue(1)
+    }
+    onSubmitProps.resetForm()
+  }
+  const login = async(values,onSubmitProps) =>{}
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if(value===1) await login(values,onSubmitProps)
+    else await register(values,onSubmitProps)
+  };
+
   return (
     <Box sx={{ p: 2, maxWidth: "sm", marginLeft: "auto", marginRight: "auto" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -94,7 +114,7 @@ const Form = () => {
             resetForm,
           }) => (
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={2}>
+              <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
@@ -173,7 +193,7 @@ const Form = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button variant="contained" color="primary" fullWidth>
+                  <Button variant="contained" color="primary"  type ='submit' fullWidth>
                     Sign Up
                   </Button>
                 </Grid>
@@ -183,32 +203,62 @@ const Form = () => {
         </Formik>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <form>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Email"
-                variant="outlined"
-              />
+        <Formik
+        onSubmit={handleFormSubmit}
+        initialValues={initialValuesLogin}
+        validationSchema={loginSchema}>
+           {({
+            values,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            setFieldValue,
+            resetForm,
+          }) => (<form>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="outlined-basic"
+                  label="Email"
+                  variant="outlined"
+                  name="login_email"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.login_email}
+                    error={
+                      Boolean(touched.login_email) && Boolean(errors.login_email)
+                    }
+                    helperText={touched.login_email && errors.login_email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="outlined-basic"
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  name="login_password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.login_password}
+                    error={
+                      Boolean(touched.login_password) && Boolean(errors.login_password)
+                    }
+                    helperText={touched.login_password && errors.login_password}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" fullWidth>
+                  Log In
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="outlined-basic"
-                label="Password"
-                variant="outlined"
-                type="password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant="contained" color="primary" fullWidth>
-                Log In
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+          </form>)}
+        </Formik>
       </TabPanel>
     </Box>
   );
