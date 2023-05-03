@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Box, Grid, TextField, Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -8,10 +8,16 @@ import * as yup from "yup";
 import {useNavigate} from 'react-router-dom'
 import {useDispatch} from 'react-redux'
 import { setLogin } from "../../state";
-
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const Form = () => {
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  const [open,setOpen] = useState(false)
   const [value, setValue] = useState(0);
+  const errorMessage = useRef("")
   const dispatch = useDispatch()
   const navigate = useNavigate()
   console.log(value);
@@ -93,12 +99,16 @@ const Form = () => {
     })
     const res = await savedUserResponse.json()
     console.log(res)
-    if(res){
+    if(res.token){
       dispatch(setLogin({
         user:res.foundUser,
         token:res.token
       }))
       navigate('/')
+    }
+    else if(res.message){
+      setOpen(true)
+      errorMessage.current=res.message
     }
   }
 
@@ -275,6 +285,11 @@ const Form = () => {
           </form>)}
         </Formik>
       </TabPanel>
+      {open && <Snackbar open={open} autoHideDuration={6000} onClose={()=>setOpen(false)}>
+    <Alert  severity="error" sx={{ width: '100%' }}>
+      {errorMessage.current}
+    </Alert>
+  </Snackbar>}
     </Box>
   );
 };
