@@ -4,6 +4,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useSelector } from "react-redux";
 import CatList from "../../components/Catlist/CatList";
+import DestinationInput from "../../components/DestinationInput/DestinationInput";
 const WelcomePage = () =>{
     const [open,setOpen] = useState(true)
     const Alert = React.forwardRef(function Alert(props, ref) {
@@ -12,6 +13,7 @@ const WelcomePage = () =>{
     const isLoggedIn = useSelector(state=>state.token)
     return<>
     <Navbar/>
+    <DestinationInput/>
     {isLoggedIn && <Snackbar open={open} autoHideDuration={6000} onClose={()=>setOpen(false)}>
     <Alert  severity="success" sx={{ width: '100%' }}>
       Succesfully logged in!

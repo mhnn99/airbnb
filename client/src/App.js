@@ -6,9 +6,11 @@ import { themeSettings } from './theme';
 import {createTheme} from '@mui/material/styles'
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import Login from './pages/LoginPage/Login';
+import { useSelector } from 'react-redux';
 
 function App() {
-  const theme = createTheme(themeSettings('dark'))
+  const mode = useSelector(state=>state.mode)
+  const theme = createTheme(themeSettings(mode))
   return (
    <BrowserRouter>
    <ThemeProvider theme={theme}>

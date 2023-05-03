@@ -11,15 +11,18 @@ import Link from '@material-ui/core/Link';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../../state';
+import Switch from '@mui/material/Switch'
+import { setMode } from '../../state';
 
 
 const Navbar = () =>{
-  const isLoggedIn = useSelector(state=>({user:state.user, token:state.token}))
+  const isLoggedIn = useSelector(state=>({user:state.user, token:state.token, mode:state.mode}))
     const MyLink = React.forwardRef((props, ref) => (
         <RouterLink ref={ref} to='/login' {...props} />
       ));
       console.log(isLoggedIn.token)
       const dispatch = useDispatch()
+      const isDarkMode = isLoggedIn.mode === 'dark'
     return (
       isLoggedIn.token!==null?
           <AppBar position="static">
@@ -36,6 +39,7 @@ const Navbar = () =>{
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {isLoggedIn.user.firstName}
               </Typography> 
+              <Switch checked={isDarkMode} onClick={()=>dispatch(setMode())}></Switch>
               <Button onClick={()=>dispatch(setLogout({user:null,token:null}))} color='inherit'>Log out</Button>
             </Toolbar>
           </AppBar>
@@ -54,6 +58,7 @@ const Navbar = () =>{
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 News
               </Typography> 
+              <Switch checked={isDarkMode} onClick={()=>dispatch(setMode())}></Switch>
               <Link component={MyLink} color='inherit'>
               <Button color="inherit">Login</Button>
               </Link>
