@@ -41,7 +41,7 @@ const cities = useSelector(state=>({cities:state.cities,initialArr:state.initial
         <Grid container spacing={4}>
           {cities.cities.length && cities.cities.map((city, index) => (
             <Grid item xs={12} md={4} key={index}>
-              <Card sx={{ maxWidth: 345 }}>
+              <Card>
                 <CardMedia
                   sx={{ height: 200 }}
                   component="img"
