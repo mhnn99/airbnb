@@ -3,7 +3,9 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState = {
     mode:'light',
     user:null,
-    token:null
+    token:null,
+    initialArr:["Berlin", "Madrid", "London", "Ibiza", "Antalya", "Hurghada"],
+    cities:[]
 }
 
 export const authSlice = createSlice({
@@ -20,9 +22,12 @@ export const authSlice = createSlice({
         setLogout:(state)=>{
             state.user = null;
             state.token = null;
+        },
+        setCities:(state,action)=>{
+            state.cities = action.payload.cities
         }
     }
 })
 
-export const {setMode, setLogin, setLogout} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities} = authSlice.actions
 export default authSlice.reducer

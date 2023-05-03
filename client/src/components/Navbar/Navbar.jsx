@@ -9,7 +9,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {Link as RouterLink} from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { useSelector } from 'react-redux';
-import state from '../../state';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../../state';
 

@@ -8,7 +8,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import Login from './pages/LoginPage/Login';
 
 function App() {
-  const theme = createTheme(themeSettings('light'))
+  const theme = createTheme(themeSettings('dark'))
   return (
    <BrowserRouter>
    <ThemeProvider theme={theme}>

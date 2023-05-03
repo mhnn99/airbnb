@@ -3,6 +3,7 @@ import React,{useState} from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useSelector } from "react-redux";
+import CatList from "../../components/Catlist/CatList";
 const WelcomePage = () =>{
     const [open,setOpen] = useState(true)
     const Alert = React.forwardRef(function Alert(props, ref) {
@@ -16,6 +17,7 @@ const WelcomePage = () =>{
       Succesfully logged in!
     </Alert>
   </Snackbar>}
+  <CatList color='inherit'/>
     </>
 }
 
