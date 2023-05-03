@@ -2,7 +2,9 @@ import { setCities } from "../../state";
 import { useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Card, CardContent, CardMedia } from '@material-ui/core';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
 import { Box, Grid, TextField, Button, useTheme } from "@mui/material";
 
 
@@ -31,20 +33,20 @@ const cities = useSelector(state=>({cities:state.cities,initialArr:state.initial
       }
     };
     fetchCities();
-  }, [cities.initialArr]);
+  }, [dispatch]);
 
   return (
     <>
-      <Box sx={{ p: 2, maxWidth: "lg", marginLeft: "auto", marginRight: "auto" }} color='inherit'>
+      <Box sx={{ p: 2, maxWidth: "lg", marginLeft: "auto", marginRight: "auto" }}>
         <Grid container spacing={4}>
           {cities.cities.length && cities.cities.map((city, index) => (
             <Grid item xs={12} md={4} key={index}>
-              <Card>
+              <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
+                  sx={{ height: 200 }}
                   component="img"
                   alt="City"
                   image={city.photos[0].src.original}
-                  height="250"
                 />
                 <CardContent>{cities.initialArr[index]}</CardContent>
               </Card>

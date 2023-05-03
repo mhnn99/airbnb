@@ -17,7 +17,7 @@ const WelcomePage = () =>{
       Succesfully logged in!
     </Alert>
   </Snackbar>}
-  <CatList color='inherit'/>
+  <CatList/>
     </>
 }
 

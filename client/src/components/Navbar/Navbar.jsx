@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setLogout } from '../../state';
 
+
 const Navbar = () =>{
   const isLoggedIn = useSelector(state=>({user:state.user, token:state.token}))
     const MyLink = React.forwardRef((props, ref) => (
@@ -21,7 +22,6 @@ const Navbar = () =>{
       const dispatch = useDispatch()
     return (
       isLoggedIn.token!==null?
-      <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
             <Toolbar>
               <IconButton
@@ -39,9 +39,7 @@ const Navbar = () =>{
               <Button onClick={()=>dispatch(setLogout({user:null,token:null}))} color='inherit'>Log out</Button>
             </Toolbar>
           </AppBar>
-        </Box>
       :
-        <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
             <Toolbar>
               <IconButton
@@ -61,7 +59,6 @@ const Navbar = () =>{
               </Link>
             </Toolbar>
           </AppBar>
-        </Box>
       );
 }
 
