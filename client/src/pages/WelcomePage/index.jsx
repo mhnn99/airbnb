@@ -4,7 +4,6 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { useSelector } from "react-redux";
 import CatList from "../../components/Catlist/CatList";
-import DestinationInput from "../../components/DestinationInput/DestinationInput";
 const WelcomePage = () =>{
     const [open,setOpen] = useState(true)
     const Alert = React.forwardRef(function Alert(props, ref) {

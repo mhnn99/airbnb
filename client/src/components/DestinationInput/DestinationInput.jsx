@@ -13,8 +13,8 @@ const DestinationInput = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (search.city?.length > 0) {
-      navigate(`/locations/${search.city.split(' ').join('%20')}`)
+    if (search.city?.length > 0 && search.city!=="No options yet") {
+      navigate(`/locations/${search.city.split(' ').join('%20').split(',').join('%2C')}`)
       dispatch(setSearch({ search: '' }))
       dispatch(setCity({ city: '' }))
     }
@@ -40,23 +40,20 @@ const DestinationInput = () => {
     }
   }
 
-  const options = search.searchResults.length > 0 ? search.searchResults.map(el => el.query) : [''];
-  
+  const options = search.searchResults.length > 0 ? search.searchResults.map(el => el.query) : ['No options yet'];
 
   return (
-
           <Autocomplete
             disablePortal
             inputValue={search.search}
             value={search.city}
             id="combo-box-demo"
             options={options}
-            sx={{ width: 300 }}
+            sx={{ width:200 }}
             onInputChange={fetchCity}
             onChange={(e, newValue) => dispatch(setCity({ city: newValue }))}
             renderInput={(params) => <TextField {...params} label="Where to?" />}
           />
-
   );
 };
 
