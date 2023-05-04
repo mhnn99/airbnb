@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 
+
 const DestinationInput = () => {
   const search = useSelector((state) => ({ search: state.search, city: state.city, searchResults: state.searchResults }));
   const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const DestinationInput = () => {
             sx={{ width: 300 }}
             onInputChange={fetchCity}
             onChange={(e, newValue) => dispatch(setCity({ city: newValue }))}
-            renderInput={(params) => <TextField {...params} label="Movie" />}
+            renderInput={(params) => <TextField {...params} label="Where to?" />}
           />
 
   );

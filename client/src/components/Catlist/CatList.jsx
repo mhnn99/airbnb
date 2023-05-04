@@ -50,6 +50,15 @@ const cities = useSelector(state=>({cities:state.cities,initialArr:state.initial
                 />
                 <CardContent>{cities.initialArr[index]}</CardContent>
               </Card>
+              <div className="card">
+    <div class="imgbox">
+        <div class="img"></div>
+    </div>
+    <div class="details">
+        <h2 class="title">John Doe</h2>
+        <span class="caption">Developer</span>
+    </div>
+</div>
             </Grid>
           ))}
         </Grid>
