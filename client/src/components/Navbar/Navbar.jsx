@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { setLogout } from '../../state';
 import Switch from '@mui/material/Switch'
 import { setMode } from '../../state';
+import DestinationInput from '../DestinationInput/DestinationInput';
 
 
 const Navbar = () =>{
@@ -39,6 +40,7 @@ const Navbar = () =>{
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {isLoggedIn.user.firstName}
               </Typography> 
+              <DestinationInput/>
               <Switch checked={isDarkMode} onClick={()=>dispatch(setMode())}></Switch>
               <Button onClick={()=>dispatch(setLogout({user:null,token:null}))} color='inherit'>Log out</Button>
             </Toolbar>
@@ -58,6 +60,7 @@ const Navbar = () =>{
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 News
               </Typography> 
+              <DestinationInput/>
               <Switch checked={isDarkMode} onClick={()=>dispatch(setMode())}></Switch>
               <Link component={MyLink} color='inherit'>
               <Button color="inherit">Login</Button>
