@@ -13,7 +13,6 @@ const WelcomePage = () =>{
     const isLoggedIn = useSelector(state=>state.token)
     return<>
     <Navbar/>
-    <DestinationInput/>
     {isLoggedIn && <Snackbar open={open} autoHideDuration={6000} onClose={()=>setOpen(false)}>
     <Alert  severity="success" sx={{ width: '100%' }}>
       Succesfully logged in!

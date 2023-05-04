@@ -5,6 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
+
 const DestinationInput = () => {
   const search = useSelector((state) => ({ search: state.search, city: state.city, searchResults: state.searchResults }));
   const dispatch = useDispatch();
@@ -39,14 +40,10 @@ const DestinationInput = () => {
   }
 
   const options = search.searchResults.length > 0 ? search.searchResults.map(el => el.query) : [''];
+  
 
   return (
-    <Box sx={{ p: 2, maxWidth: "sm", marginLeft: "auto", marginRight: "auto" }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={4}>
-          <TextField type="date" />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
+
           <Autocomplete
             disablePortal
             inputValue={search.search}
@@ -58,9 +55,7 @@ const DestinationInput = () => {
             onChange={(e, newValue) => dispatch(setCity({ city: newValue }))}
             renderInput={(params) => <TextField {...params} label="Movie" />}
           />
-        </Grid>
-      </Grid>
-    </Box>
+
   );
 };
 
