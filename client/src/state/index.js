@@ -5,7 +5,10 @@ const initialState = {
     user:null,
     token:null,
     initialArr:["Berlin", "Madrid", "London", "Ibiza", "Antalya", "Hurghada"],
-    cities:[]
+    cities:[],
+    search:'',
+    city:'',
+    searchResults:[]
 }
 
 export const authSlice = createSlice({
@@ -25,9 +28,18 @@ export const authSlice = createSlice({
         },
         setCities:(state,action)=>{
             state.cities = action.payload.cities
+        },
+        setSearch:(state,action)=>{
+            state.search=action.payload.search
+        },
+        setCity:(state,action)=>{
+            state.city=action.payload.city
+        },
+        setSearchResults:(state,action) =>{
+            state.searchResults=action.payload.searchResults
         }
     }
 })
 
-export const {setMode, setLogin, setLogout, setCities} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults} = authSlice.actions
 export default authSlice.reducer
