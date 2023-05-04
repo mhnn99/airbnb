@@ -5,6 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
+
 const DestinationInput = () => {
   const search = useSelector((state) => ({ search: state.search, city: state.city, searchResults: state.searchResults }));
   const dispatch = useDispatch();
