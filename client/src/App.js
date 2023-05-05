@@ -8,6 +8,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import Login from './pages/LoginPage/Login';
 import { useSelector } from 'react-redux';
 import ListingsPage from './pages/ListingsPage/ListingsPage';
+import Account from './components/Account/Account';
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -20,6 +21,7 @@ function App() {
     <Route path='/' element={<WelcomePage/>}/>
     <Route path='/login' element={<Login/>}/>
     <Route path ='/locations/:city' element={<ListingsPage/>}/>
+    <Route path = '/account' element={<Account/>}/>
    </Routes>
    </ThemeProvider>
    </BrowserRouter>

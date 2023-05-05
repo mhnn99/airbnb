@@ -39,6 +39,7 @@ const DestinationInput = () => {
       console.error(error);
     }
   }
+  console.log(fetchCity)
 
   const options = search.searchResults.length > 0 ? search.searchResults.map(el => el.query) : ['No options yet'];
 
