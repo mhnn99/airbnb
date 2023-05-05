@@ -8,7 +8,8 @@ const initialState = {
     cities:[],
     search:'',
     city:'',
-    searchResults:[]
+    searchResults:[],
+    listings:[]
 }
 
 export const authSlice = createSlice({
@@ -37,9 +38,12 @@ export const authSlice = createSlice({
         },
         setSearchResults:(state,action) =>{
             state.searchResults=action.payload.searchResults
+        },
+        setListings:(state,action)=>{
+            state.listings = action.payload.listings
         }
     }
 })
 
-export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings} = authSlice.actions
 export default authSlice.reducer

@@ -9,6 +9,7 @@ import Login from './pages/LoginPage/Login';
 import { useSelector } from 'react-redux';
 import ListingsPage from './pages/ListingsPage/ListingsPage';
 import Account from './components/Account/Account';
+import ListingPage from './pages/ListingPage/ListingPage';
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -22,6 +23,7 @@ function App() {
     <Route path='/login' element={<Login/>}/>
     <Route path ='/locations/:city' element={<ListingsPage/>}/>
     <Route path = '/account' element={<Account/>}/>
+    <Route path ='/location/:id' element={<ListingPage/>}/>
    </Routes>
    </ThemeProvider>
    </BrowserRouter>
