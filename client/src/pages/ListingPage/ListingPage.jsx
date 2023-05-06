@@ -1,5 +1,11 @@
+import Listing from "../../components/Listing/Listing"
+import Navbar from "../../components/Navbar/Navbar"
+
 const ListingPage = () =>{
-    return <h1>asd</h1>
+    return <>
+    <Navbar/>
+    <Listing/>
+    </>
 }
 
 export default ListingPage

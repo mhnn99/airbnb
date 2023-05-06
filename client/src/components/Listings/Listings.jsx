@@ -70,7 +70,7 @@ const Listings = () => {
                       {listing.reviewsCount} reviews
                     </Typography>
                     </Box>
-                    {listing?.isSuperhost&&<HowToRegIcon sx={{marginTop:'12px'}}/>}
+                    {listing?.isSuperhost&&<Box sx={{display:'flex'}}><HowToRegIcon sx={{marginTop:'12px'}}/> <Typography sx={{marginLeft:'12px', marginTop:'12px'}}>Superhost</Typography></Box>}
                     <Box sx={{marginTop:6, position:'absolute', top:110, left:19}}>
                       <Typography color='primary'>
                         {listing.price.total} {listing.price.currency} per night
