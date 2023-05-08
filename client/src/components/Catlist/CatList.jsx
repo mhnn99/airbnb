@@ -2,20 +2,16 @@ import { setCities } from "../../state";
 import { useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import { Box, Grid, TextField, Button, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-
+import { useNavigate } from "react-router-dom";
 
 const CatList = () => {
 const dispatch = useDispatch()
 const cities = useSelector(state=>({cities:state.cities,initialArr:state.initialArr}))
-  const theme = useTheme();
-
+const navigate = useNavigate()
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -104,17 +100,17 @@ const cities = useSelector(state=>({cities:state.cities,initialArr:state.initial
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', minWidth: 300, width: '100%' }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', minWidth: 300, width: '100%', justifyContent:"center" }}>
       {cities.cities.map((image, index) => (
         <ImageButton
           focusRipple
           key={cities.initialArr[index]}
           style={{
-            width: '30%',
+            width: '25%',
             margin: 30
           }}
         >
-          <ImageSrc style={{ backgroundImage: `url(${image.photos[0].src.original})` }} />
+          <ImageSrc style={{ backgroundImage: `url(${image.photos[0].src.large})` }} />
           <ImageBackdrop className="MuiImageBackdrop-root" />
           <Image>
             <Typography
@@ -127,6 +123,7 @@ const cities = useSelector(state=>({cities:state.cities,initialArr:state.initial
                 pt: 2,
                 pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
               }}
+              onClick={()=>navigate(`/locations/${cities.initialArr[index]}`)}
             >
               {cities.initialArr[index]}
               <ImageMarked className="MuiImageMarked-root" />
