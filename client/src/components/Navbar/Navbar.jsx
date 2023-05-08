@@ -139,22 +139,31 @@ const Navbar = () => {
   ) : (
     <AppBar position="sticky">
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+          <Link
+            component={MyHome}
+            onClick={handleCloseUserMenu}
+            color="inherit"
+            underline="none"
+          >
+            <HomeIcon sx={{ fontSize: 40, mt: 1 }} />
+          </Link>
         <Typography
           variant="h6"
           noWrap
           component="a"
           sx={{
-            mr: 2,
-            display: { xs: "none", md: "flex" },
-            fontFamily: "monospace",
-            fontWeight: 700,
-            letterSpacing: ".3rem",
-            color: "inherit",
-            textDecoration: "none",
+            padding: 2,
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              alignItems: "flex-start",
+              color: "inherit",
+              textDecoration: "none",
           }}
         >
           Travel Website
         </Typography>
+        </Box>
         <DestinationInput />
         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
           <Switch
