@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import ListingsPage from './pages/ListingsPage/ListingsPage';
 import Account from './components/Account/Account';
 import ListingPage from './pages/ListingPage/ListingPage';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
   const mode = useSelector(state=>state.mode)
@@ -18,6 +20,7 @@ function App() {
    <BrowserRouter>
    <ThemeProvider theme={theme}>
     <CssBaseline/>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
    <Routes>
     <Route path='/' element={<WelcomePage/>}/>
     <Route path='/login' element={<Login/>}/>
@@ -25,6 +28,7 @@ function App() {
     <Route path = '/account' element={<Account/>}/>
     <Route path ='/location/:id' element={<ListingPage/>}/>
    </Routes>
+    </LocalizationProvider>
    </ThemeProvider>
    </BrowserRouter>
   );

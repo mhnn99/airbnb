@@ -1,17 +1,21 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import React, { useState } from "react";
-import { Typography } from "@mui/material";
+import React, { useState, useRef } from "react";
+import { TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { Grid, Box } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { useTheme } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, EffectCoverflow, Zoom } from "swiper";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import * as yup from "yup";
+import { Formik } from "formik";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
@@ -127,6 +131,8 @@ const Listing = () => {
   const theme = useTheme();
   const [listing, setListing] = useState([]);
   const { id } = useParams();
+ const [checkinDate, setCheckinDate] = useState(null)
+  const [checkOutDate, setCheckoutDate] = useState(null)
   const listings = useSelector((state) => state.listings);
   useEffect(() => {
     setListing(listings.results.filter((el) => el.id === id));
@@ -138,6 +144,13 @@ const Listing = () => {
       icon: amenities[amenities.findIndex((element) => element.id === el)].icon,
     }));
 
+  const handleSubmit = async () => {
+    const order = {
+      checkinDate:checkinDate,
+      checkOutDate:checkOutDate
+    }
+    console.log(order)
+  };
   return (
     <>
       {listing.length > 0 && (
@@ -181,18 +194,34 @@ const Listing = () => {
               ))}
           </Swiper>
         </Container>
-        <Grid container spacing={3} sx={{marginTop:3}}>
+        <Grid container spacing={3} sx={{ marginTop: 3 }}>
           <Grid item xs={12} md={6}>
             <Typography sx={{ fontSize: "28px", marginTop: 2 }}>
               {listing[0]?.type}
             </Typography>
-            <Typography sx={{fontSize:'20px', color:theme.palette.secondary.dark}}>Rooms</Typography>
-            <Box sx={{ display: "flex", marginTop:2}}>
-              <Typography>Bedrooms:{listing[0]?.bedrooms}{" "} </Typography>
-              <Typography sx={{marginLeft:1}}>Bathrooms:{listing[0]?.bathrooms}{" "}</Typography>
-              <Typography sx={{marginLeft:1}}>Beds:{listing[0]?.beds}</Typography>
+            <Typography
+              sx={{ fontSize: "20px", color: theme.palette.secondary.dark }}
+            >
+              Rooms
+            </Typography>
+            <Box sx={{ display: "flex", marginTop: 2 }}>
+              <Typography>Bedrooms:{listing[0]?.bedrooms} </Typography>
+              <Typography sx={{ marginLeft: 1 }}>
+                Bathrooms:{listing[0]?.bathrooms}{" "}
+              </Typography>
+              <Typography sx={{ marginLeft: 1 }}>
+                Beds:{listing[0]?.beds}
+              </Typography>
             </Box>
-            <Typography sx={{ marginTop: 2, fontSize:'20px', color:theme.palette.secondary.dark}}>Amenities</Typography>
+            <Typography
+              sx={{
+                marginTop: 2,
+                fontSize: "20px",
+                color: theme.palette.secondary.dark,
+              }}
+            >
+              Amenities
+            </Typography>
             <Grid container spacing={1} sx={{ marginTop: 2 }}>
               {amenitiesList?.map((el, i) => (
                 <Grid item xs={6} md={4} key={i}>
@@ -202,14 +231,36 @@ const Listing = () => {
               ))}
             </Grid>
           </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography sx={{fontSize:'28px', textAlign:'center'}}>Reservation Details</Typography>
-            </CardContent>
-            <CardActions><Button fullWidth>Book now</Button></CardActions>
-          </Card>
-        </Grid>
+          <Grid item xs={12} md={6}>
+                  <Card>
+                    <CardContent>
+                      <Typography
+                        sx={{ fontSize: "28px", textAlign: "center" }}
+                      >
+                        Reservation Details
+                      </Typography>
+                      <Box sx={{ margin: 4 }}>
+                        <Typography>Check in date:</Typography>
+                        <DatePicker
+                        value={checkinDate}
+                        onChange={(newValue)=>{
+                          setCheckinDate(dayjs(newValue))
+                          setCheckoutDate(newValue.add(1,'day'))
+                        }}
+                         disablePast/>
+                      </Box>
+                      <Box sx={{ margin: 4 }}>
+                        <Typography>Checkout date:</Typography>
+                        <DatePicker value={checkOutDate} 
+                        onChange={(newValue)=>setCheckoutDate(dayjs(newValue))}
+                        disablePast/>
+                      </Box>
+                    </CardContent>
+                    <CardActions>
+                      <Button fullWidth onClick={()=>handleSubmit()}>Book now</Button>
+                    </CardActions>
+                  </Card>
+          </Grid>
         </Grid>
       </Box>
     </>
