@@ -132,11 +132,20 @@ const Listing = () => {
   const [listing, setListing] = useState([]);
   const { id } = useParams();
  const [checkinDate, setCheckinDate] = useState(null)
-  const [checkOutDate, setCheckoutDate] = useState(null)
+  const [checkoutDate, setCheckoutDate] = useState(null)
   const listings = useSelector((state) => state.listings);
+  const userId = useSelector((state)=>state.user._id)
+  const [orders,setOrders] = useState([])
   useEffect(() => {
     setListing(listings.results.filter((el) => el.id === id));
+    const fetchOrders = async() =>{
+      const orders = await fetch(`http://localhost:9000/orders/${id}`)
+      const res = await orders.json()
+      setOrders(res)
+    }
+    fetchOrders()
   }, [id, listings.results]);
+  console.log(orders)
   const amenitiesList = listing[0]?.amenityIds
     .filter((el) => amenities.map((el) => el.id).includes(el))
     .map((el) => ({
@@ -146,11 +155,20 @@ const Listing = () => {
 
   const handleSubmit = async () => {
     const order = {
+      userId:userId,
+      listingId:id,
       checkinDate:checkinDate,
-      checkOutDate:checkOutDate
+      checkoutDate:checkoutDate
     }
-    console.log(order)
+    const orderPost = await fetch('http://localhost:9000/orders',{
+      method:'POST',
+      body:JSON.stringify(order),
+      headers:{'Content-type': 'application/json; charset=UTF-8'}
+    })
+    const res = await orderPost.json()
+
   };
+
   return (
     <>
       {listing.length > 0 && (
@@ -251,7 +269,7 @@ const Listing = () => {
                       </Box>
                       <Box sx={{ margin: 4 }}>
                         <Typography>Checkout date:</Typography>
-                        <DatePicker value={checkOutDate} 
+                        <DatePicker value={checkoutDate} 
                         onChange={(newValue)=>setCheckoutDate(dayjs(newValue))}
                         disablePast/>
                       </Box>

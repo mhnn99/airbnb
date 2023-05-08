@@ -10,6 +10,8 @@ const {MONGO_URL,PORT} = process.env
 const authFunc = require('./controllers/auth')
 
 const {register, login} = authFunc;
+const orderFunc = require('./controllers/orders')
+const {postOrder, getOrders} = orderFunc
 
 
 if (!MONGO_URL) {
@@ -21,5 +23,7 @@ mongoose.connect(MONGO_URL)
 
 app.post('/auth/register',register)
 app.post('/auth/login', login)
+app.post('/orders',postOrder)
+app.get('/orders/:id',getOrders)
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))
 
