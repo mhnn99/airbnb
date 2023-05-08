@@ -8,6 +8,10 @@ import Carousel from "react-material-ui-carousel";
 import { useTheme } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, EffectCoverflow, Zoom } from "swiper";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
@@ -36,7 +40,6 @@ import ElevatorIcon from "@mui/icons-material/Elevator";
 import HotTubIcon from "@mui/icons-material/HotTub";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import WashIcon from "@mui/icons-material/Wash";
-import SmokeFreeIcon from "@mui/icons-material/SmokeFree";
 import WarningIcon from "@mui/icons-material/Warning";
 import SpaIcon from "@mui/icons-material/Spa";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
@@ -68,7 +71,7 @@ const Listing = () => {
     { id: 30, name: "Heating", icon: <WhatshotIcon /> },
     { id: 33, name: "Washer", icon: <WashIcon /> },
     { id: 34, name: "Dryer", icon: <DryIcon /> },
-    { id: 35, name: "Smoke alarm", icon: <SmokeFreeIcon /> },
+    { id: 35, name: "Smoke alarm", icon: <WarningIcon /> },
     { id: 36, name: "Carbon monoxide alarm", icon: <WarningIcon /> },
     { id: 41, name: "Shampoo", icon: <SpaIcon /> },
     { id: 44, name: "Hangers", icon: <CheckroomIcon /> },
@@ -178,12 +181,19 @@ const Listing = () => {
               ))}
           </Swiper>
         </Container>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{marginTop:3}}>
           <Grid item xs={12} md={6}>
-            <Typography sx={{ fontSize: "20px" }}>
+            <Typography sx={{ fontSize: "28px", marginTop: 2 }}>
               {listing[0]?.type}
             </Typography>
-            <Grid container spacing={2} sx={{ marginTop: 2 }}>
+            <Typography sx={{fontSize:'20px', color:theme.palette.secondary.dark}}>Rooms</Typography>
+            <Box sx={{ display: "flex", marginTop:2}}>
+              <Typography>Bedrooms:{listing[0]?.bedrooms}{" "} </Typography>
+              <Typography sx={{marginLeft:1}}>Bathrooms:{listing[0]?.bathrooms}{" "}</Typography>
+              <Typography sx={{marginLeft:1}}>Beds:{listing[0]?.beds}</Typography>
+            </Box>
+            <Typography sx={{ marginTop: 2, fontSize:'20px', color:theme.palette.secondary.dark}}>Amenities</Typography>
+            <Grid container spacing={1} sx={{ marginTop: 2 }}>
               {amenitiesList?.map((el, i) => (
                 <Grid item xs={6} md={4} key={i}>
                   {el.icon}
@@ -192,6 +202,14 @@ const Listing = () => {
               ))}
             </Grid>
           </Grid>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography sx={{fontSize:'28px', textAlign:'center'}}>Reservation Details</Typography>
+            </CardContent>
+            <CardActions><Button fullWidth>Book now</Button></CardActions>
+          </Card>
+        </Grid>
         </Grid>
       </Box>
     </>
