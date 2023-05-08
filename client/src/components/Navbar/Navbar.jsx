@@ -17,7 +17,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import DestinationInput from "../DestinationInput/DestinationInput";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 
 const Navbar = () => {
   const settings = ["Account", "Logout"];
@@ -53,20 +53,20 @@ const Navbar = () => {
     <AppBar position="sticky">
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-          <Link 
-          component={MyHome}
-
-                        onClick={handleCloseUserMenu}
-                        color="inherit"
-                        underline="none">
-            <HomeIcon sx={{ fontSize: 40, mt:1 }} />
+          <Link
+            component={MyHome}
+            onClick={handleCloseUserMenu}
+            color="inherit"
+            underline="none"
+          >
+            <HomeIcon sx={{ fontSize: 40, mt: 1 }} />
           </Link>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{
-              padding:2,
+              padding: 2,
               mr: 2,
               display: { xs: "none", md: "flex" },
               alignItems: "flex-start",
