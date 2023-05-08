@@ -4,7 +4,7 @@ const initialState = {
     mode:'dark',
     user:null,
     token:null,
-    initialArr:["Berlin", "Madrid", "London", "Ibiza", "Antalya", "Hurghada"],
+    initialArr:["Berlin", "Madrid", "London", "Ibiza", "Antalya", "Hurghada", "New York City", "Bora Bora", "Rome", "Tokyo", "Maldives", "Phuket"],
     cities:[],
     search:'',
     city:'',
