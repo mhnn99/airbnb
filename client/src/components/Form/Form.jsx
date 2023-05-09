@@ -10,6 +10,9 @@ import {useDispatch} from 'react-redux'
 import { setLogin } from "../../state";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { Typography } from "@material-ui/core";
+import { Navigate, Link as RouterLink } from "react-router-dom";
+import Link from "@material-ui/core/Link";
 
 const Form = () => {
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -17,6 +20,7 @@ const Form = () => {
   });
   const [open,setOpen] = useState(false)
   const [value, setValue] = useState(0);
+  const [forgotPW, setForgotPW] = useState(false);
   const errorMessage = useRef("")
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -30,6 +34,11 @@ const Form = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const forgotPasswordChange = () => {
+    setForgotPW(true)
+  }
+  
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -57,7 +66,7 @@ const Form = () => {
     lastName: yup.string().required("required"),
     email: yup.string().email("Invalid Email").required("required"),
     password: yup.string().required("required"),
-    confirmPassword: yup.string()
+    confirmPassword: yup.string().required("required")
     .oneOf([yup.ref('password'), null], 'Passwords must match'),
   });
   const loginSchema = yup.object().shape({
@@ -107,6 +116,24 @@ const Form = () => {
       navigate('/')
     }
     else if(res.message){
+      setOpen(true)
+      errorMessage.current=res.message
+    }
+  }
+  const changePassword = async(values) => {
+    console.log(values)
+    const patchChangePassword = await fetch('http://localhost:9000/change',{
+      method:'PATCH',
+      body:JSON.stringify(values),
+      headers:{'Content-type': 'application/json; charset=UTF-8'}
+    })
+    const res = await patchChangePassword.json()
+    console.log(res)
+    if(res.message==='Password changed successfully!'){
+      errorMessage.current=res.message
+      setForgotPW(false)
+      setOpen(true)
+    }else{
       setOpen(true)
       errorMessage.current=res.message
     }
@@ -230,7 +257,63 @@ const Form = () => {
         </Formik>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Formik
+      {forgotPW ? (<Formik
+        onSubmit={changePassword}
+        initialValues={initialValuesLogin}
+        validationSchema={loginSchema}>
+           {({
+            values,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            setFieldValue,
+            resetForm,
+          }) => (<form onSubmit={handleSubmit}>
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  variant="outlined"
+                  name="email"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.login_email}
+                    error={
+                      Boolean(touched.email) && Boolean(errors.email)
+                    }
+                    helperText={touched.email && errors.email}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="New Password"
+                  variant="outlined"
+                  type="password"
+                  name="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.password}
+                    error={
+                      Boolean(touched.password) && Boolean(errors.password)
+                    }
+                    helperText={touched.password && errors.password}
+                />
+              </Grid>
+              <Grid item xs={12}>
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" type='submit'fullWidth>
+                  Change Password
+                </Button>
+              </Grid>
+            </Grid>
+          </form>)}
+        </Formik>):
+      (<Formik
         onSubmit={login}
         initialValues={initialValuesLogin}
         validationSchema={loginSchema}>
@@ -277,6 +360,9 @@ const Form = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+              <Link onClick={forgotPasswordChange}>Forgot Password ?</Link>
+              </Grid>
+              <Grid item xs={12}>
                 <Button variant="contained" color="primary" type='submit'fullWidth>
                   Log In
                 </Button>
@@ -284,9 +370,9 @@ const Form = () => {
             </Grid>
           </form>)}
         </Formik>
-      </TabPanel>
+      )}</TabPanel>
       {open && <Snackbar open={open} autoHideDuration={6000} onClose={()=>setOpen(false)}>
-    <Alert  severity="error" sx={{ width: '100%' }}>
+    <Alert  severity={errorMessage.current === 'Password changed successfully!' ? 'success' : 'error'} sx={{ width: '100%' }}>
       {errorMessage.current}
     </Alert>
   </Snackbar>}

@@ -39,4 +39,17 @@ const login = async(req,res) =>{
   }
 }
 
-module.exports = {register, login}
+const changePassword = async (req,res) =>{
+  try{
+    const {email, password} = req.body
+    const salt = await bcrypt.genSalt()
+    const passwordHash = await bcrypt.hash(password,salt)
+    const foundUser = await userModel.findOneAndUpdate({email:email},{password:passwordHash,},{new:true})
+    if(!foundUser)return res.status(400).json({message:'User not found'}) 
+    res.status(200).json({message:'Password changed successfully!'})
+  } catch (err) {
+    res.status(500).json({message:err.message})
+  }
+}
+
+module.exports = {register, login, changePassword}
