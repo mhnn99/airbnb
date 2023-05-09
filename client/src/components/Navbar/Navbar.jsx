@@ -111,14 +111,16 @@ const Navbar = () => {
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   {setting === "Logout" ? (
-                    <Typography
-                      textAlign="center"
-                      onClick={() =>
-                        dispatch(setLogout({ user: null, token: null }))
-                      }
-                    >
+                    <Link
+                    component={MyHome}
+                    onClick={() =>
+                      dispatch(setLogout({ user: null, token: null }))
+                    }
+                    color="inherit"
+                    underline="none"
+                  >
                       {setting}
-                    </Typography>
+                    </Link>
                   ) : (
                     <Link
                       component={MyAccount}
