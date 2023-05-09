@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import jwt_decode from 'jwt-decode'
 import { useSelector } from "react-redux";
 import React, { useState, useRef } from "react";
 import { TextField, Typography } from "@mui/material";
@@ -56,6 +57,7 @@ import BathroomIcon from "@mui/icons-material/Bathroom";
 import RouteIcon from "@mui/icons-material/Route";
 import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
+import state from "../../state";
 
 const Listing = () => {
   const amenities = [
@@ -129,13 +131,16 @@ const Listing = () => {
     { id: 609, name: "Extra space around shower", icon: <ShowerIcon /> },
   ];
   const theme = useTheme();
+  const navigate = useNavigate()
   const [listing, setListing] = useState([]);
   const { id } = useParams();
  const [checkinDate, setCheckinDate] = useState(null)
   const [checkoutDate, setCheckoutDate] = useState(null)
   const listings = useSelector((state) => state.listings);
-  const userId = useSelector((state)=>state.user._id)
   const [orders,setOrders] = useState([])
+  const user = useSelector((state)=>({user: state.user, token:state.token}))
+
+
   useEffect(() => {
     setListing(listings.results.filter((el) => el.id === id));
     const fetchOrders = async() =>{
@@ -153,22 +158,42 @@ const Listing = () => {
       icon: amenities[amenities.findIndex((element) => element.id === el)].icon,
     }));
 
-  const handleSubmit = async () => {
-    const order = {
-      userId:userId,
-      listingId:id,
-      checkinDate:checkinDate,
-      checkoutDate:checkoutDate
+    const handleSubmit = async () => {
+      const token = user ? user.token : null;
+    
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        const order = {
+          userId: decodedToken.userId,
+          listingId: id,
+          checkinDate: checkinDate,
+          checkoutDate: checkoutDate,
+        };
+    
+        const orderPost = await fetch('http://localhost:9000/orders', {
+          method: 'POST',
+          body: JSON.stringify(order),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+    
+        const res = await orderPost.json();
+      } else {
+        navigate('/login');
+      }
+    };
+  const isBooked = (date) =>{
+    for(let i = 0; i<orders.ordersByListing.length;i++){
+      if((date.isAfter(orders.ordersByListing[i].checkinDate)&&date.isBefore(orders.ordersByListing[i].checkoutDate))){
+        return true
+      }else if((date.isSame(orders.ordersByListing[i].checkinDate) || date.isSame(orders.ordersByListing[i].checkoutDate))){
+        return true
+      }
     }
-    const orderPost = await fetch('http://localhost:9000/orders',{
-      method:'POST',
-      body:JSON.stringify(order),
-      headers:{'Content-type': 'application/json; charset=UTF-8'}
-    })
-    const res = await orderPost.json()
-
-  };
-
+    return false
+  }
   return (
     <>
       {listing.length > 0 && (
@@ -260,6 +285,7 @@ const Listing = () => {
                       <Box sx={{ margin: 4 }}>
                         <Typography>Check in date:</Typography>
                         <DatePicker
+                        shouldDisableDate={isBooked}
                         value={checkinDate}
                         onChange={(newValue)=>{
                           setCheckinDate(dayjs(newValue))
@@ -270,6 +296,7 @@ const Listing = () => {
                       <Box sx={{ margin: 4 }}>
                         <Typography>Checkout date:</Typography>
                         <DatePicker value={checkoutDate} 
+                        shouldDisableDate={isBooked}
                         onChange={(newValue)=>setCheckoutDate(dayjs(newValue))}
                         disablePast/>
                       </Box>
