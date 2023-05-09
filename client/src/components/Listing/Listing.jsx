@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
-import jwt_decode from 'jwt-decode'
-import { useSelector } from "react-redux";
+import jwt_decode from "jwt-decode";
+import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useRef } from "react";
 import { TextField, Typography } from "@mui/material";
+import { setBookings } from "../../state";
 import { useEffect } from "react";
 import { Grid, Box } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
@@ -131,26 +132,29 @@ const Listing = () => {
     { id: 609, name: "Extra space around shower", icon: <ShowerIcon /> },
   ];
   const theme = useTheme();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [listing, setListing] = useState([]);
   const { id } = useParams();
- const [checkinDate, setCheckinDate] = useState(null)
-  const [checkoutDate, setCheckoutDate] = useState(null)
+  const [checkinDate, setCheckinDate] = useState(null);
+  const [checkoutDate, setCheckoutDate] = useState(null);
   const listings = useSelector((state) => state.listings);
-  const [orders,setOrders] = useState([])
-  const user = useSelector((state)=>({user: state.user, token:state.token}))
-
+  const [orders, setOrders] = useState([]);
+  const user = useSelector((state) => ({
+    user: state.user,
+    token: state.token,
+  }));
 
   useEffect(() => {
     setListing(listings.results.filter((el) => el.id === id));
-    const fetchOrders = async() =>{
-      const orders = await fetch(`http://localhost:9000/orders/${id}`)
-      const res = await orders.json()
-      setOrders(res)
-    }
-    fetchOrders()
+    const fetchOrders = async () => {
+      const orders = await fetch(`http://localhost:9000/orders/${id}`);
+      const res = await orders.json();
+      setOrders(res);
+    };
+    fetchOrders();
   }, [id, listings.results]);
-  console.log(orders)
+  console.log(orders);
   const amenitiesList = listing[0]?.amenityIds
     .filter((el) => amenities.map((el) => el.id).includes(el))
     .map((el) => ({
@@ -158,42 +162,49 @@ const Listing = () => {
       icon: amenities[amenities.findIndex((element) => element.id === el)].icon,
     }));
 
-    const handleSubmit = async () => {
-      const token = user ? user.token : null;
-    
-      if (token) {
-        const decodedToken = jwt_decode(token);
-        const order = {
-          userId: decodedToken.userId,
-          listingId: id,
-          checkinDate: checkinDate,
-          checkoutDate: checkoutDate,
-        };
-    
-        const orderPost = await fetch('http://localhost:9000/orders', {
-          method: 'POST',
-          body: JSON.stringify(order),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-    
-        const res = await orderPost.json();
-      } else {
-        navigate('/login');
-      }
-    };
-  const isBooked = (date) =>{
-    for(let i = 0; i<orders.ordersByListing.length;i++){
-      if((date.isAfter(orders.ordersByListing[i].checkinDate)&&date.isBefore(orders.ordersByListing[i].checkoutDate))){
-        return true
-      }else if((date.isSame(orders.ordersByListing[i].checkinDate) || date.isSame(orders.ordersByListing[i].checkoutDate))){
-        return true
+  const handleSubmit = async () => {
+    const token = user ? user.token : null;
+
+    if (token) {
+      dispatch(setBookings(listing[0]));
+      const decodedToken = jwt_decode(token);
+      const order = {
+        userId: decodedToken.userId,
+        listingId: id,
+        checkinDate: checkinDate,
+        checkoutDate: checkoutDate,
+      };
+
+      const orderPost = await fetch("http://localhost:9000/orders", {
+        method: "POST",
+        body: JSON.stringify(order),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const res = await orderPost.json();
+    } else {
+      navigate("/login");
+    }
+  };
+  const isBooked = (date) => {
+    for (let i = 0; i < orders.ordersByListing.length; i++) {
+      if (
+        date.isAfter(orders.ordersByListing[i].checkinDate) &&
+        date.isBefore(orders.ordersByListing[i].checkoutDate)
+      ) {
+        return true;
+      } else if (
+        date.isSame(orders.ordersByListing[i].checkinDate) ||
+        date.isSame(orders.ordersByListing[i].checkoutDate)
+      ) {
+        return true;
       }
     }
-    return false
-  }
+    return false;
+  };
   return (
     <>
       {listing.length > 0 && (
@@ -275,36 +286,39 @@ const Listing = () => {
             </Grid>
           </Grid>
           <Grid item xs={12} md={6}>
-                  <Card>
-                    <CardContent>
-                      <Typography
-                        sx={{ fontSize: "28px", textAlign: "center" }}
-                      >
-                        Reservation Details
-                      </Typography>
-                      <Box sx={{ margin: 4 }}>
-                        <Typography>Check in date:</Typography>
-                        <DatePicker
-                        shouldDisableDate={isBooked}
-                        value={checkinDate}
-                        onChange={(newValue)=>{
-                          setCheckinDate(dayjs(newValue))
-                          setCheckoutDate(newValue.add(1,'day'))
-                        }}
-                         disablePast/>
-                      </Box>
-                      <Box sx={{ margin: 4 }}>
-                        <Typography>Checkout date:</Typography>
-                        <DatePicker value={checkoutDate} 
-                        shouldDisableDate={isBooked}
-                        onChange={(newValue)=>setCheckoutDate(dayjs(newValue))}
-                        disablePast/>
-                      </Box>
-                    </CardContent>
-                    <CardActions>
-                      <Button fullWidth onClick={()=>handleSubmit()}>Book now</Button>
-                    </CardActions>
-                  </Card>
+            <Card>
+              <CardContent>
+                <Typography sx={{ fontSize: "28px", textAlign: "center" }}>
+                  Reservation Details
+                </Typography>
+                <Box sx={{ margin: 4 }}>
+                  <Typography>Check in date:</Typography>
+                  <DatePicker
+                    shouldDisableDate={isBooked}
+                    value={checkinDate}
+                    onChange={(newValue) => {
+                      setCheckinDate(dayjs(newValue));
+                      setCheckoutDate(newValue.add(1, "day"));
+                    }}
+                    disablePast
+                  />
+                </Box>
+                <Box sx={{ margin: 4 }}>
+                  <Typography>Checkout date:</Typography>
+                  <DatePicker
+                    value={checkoutDate}
+                    shouldDisableDate={isBooked}
+                    onChange={(newValue) => setCheckoutDate(dayjs(newValue))}
+                    disablePast
+                  />
+                </Box>
+              </CardContent>
+              <CardActions>
+                <Button fullWidth onClick={() => handleSubmit()}>
+                  Book now
+                </Button>
+              </CardActions>
+            </Card>
           </Grid>
         </Grid>
       </Box>
