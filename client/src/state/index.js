@@ -41,9 +41,12 @@ export const authSlice = createSlice({
         },
         setListings:(state,action)=>{
             state.listings = action.payload.listings
+        },
+        setFavorites:(state,action)=>{
+            state.favorites = action.payload.favorites
         }
     }
 })
 
-export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setFavorites} = authSlice.actions
 export default authSlice.reducer
