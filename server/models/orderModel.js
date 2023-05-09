@@ -4,6 +4,7 @@ const {Schema, model} = mongoose
 const orderSchema = new Schema({
     userId:String,
     listingId:String,
+    listingName:String,
     checkinDate:{
         type:Date,
         required:true

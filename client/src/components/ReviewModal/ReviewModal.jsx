@@ -23,7 +23,6 @@ const style = {
 
 const ReviewModal = () =>{
     const user = useSelector(state=>({user:state.user,token:state.token}))
-    const userBookings = useSelector(state=>state.bookings)
     const [open,setOpen] = useState(false)
     const [booking,setBooking] = useState({})
     const comment = React.useRef('')
@@ -33,30 +32,33 @@ const ReviewModal = () =>{
             const orders = await fetch(`http://localhost:9000/user/orders/${user.user._id}`)
             const res = await orders.json()
             const order = res.ordersByUser.find(el=>dayjs(el.checkoutDate).isBefore(dayjs()))
-            console.log(order)
             if(order){
+                setBooking(order)
                 setOpen(true)
-                const bookingOrder = userBookings.find(el=>el.id===order.listingId)
-                setBooking(bookingOrder)
             }else{
-                setOpen(false)
+              setOpen(false)
             }
         }
         fetchOrders()
-    },[user.user._id, userBookings])
-    console.log(userBookings)
+    },[user.user._id])
+    console.log(booking)
     const handleSubmit = async()=>{
         const reviewPost = await fetch('http://localhost:9000/reviews',{
             method:'POST',
             body:JSON.stringify({
                 userId:user.user._id,
-                listingId:booking.id,
+                listingId:booking.listingId,
                 comment:comment.current
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8",}
         })
         const res = await reviewPost.json()
+        const deleteOrder = await fetch(`http://localhost:9000/orders/${booking._id}`,{
+          method:'DELETE',
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",}
+        })
         setOpen(false)
     }
     return (
@@ -69,7 +71,7 @@ const ReviewModal = () =>{
         >
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              How was your stay at {booking.name}?
+              How was your stay at {booking.listingName}?
             </Typography>
 
             <Box sx={{ mt: 2 }}>

@@ -3,7 +3,6 @@ import jwt_decode from "jwt-decode";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useRef } from "react";
 import { TextField, Typography } from "@mui/material";
-import { setBookings } from "../../state";
 import { useEffect } from "react";
 import { Grid, Box } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
@@ -161,16 +160,16 @@ const Listing = () => {
       name: amenities[amenities.findIndex((element) => element.id === el)].name,
       icon: amenities[amenities.findIndex((element) => element.id === el)].icon,
     }));
-
+ console.log(listing[0]?.name)
   const handleSubmit = async () => {
     const token = user ? user.token : null;
 
     if (token) {
-      dispatch(setBookings(listing[0]));
       const decodedToken = jwt_decode(token);
       const order = {
         userId: decodedToken.userId,
         listingId: id,
+        listingName:listing[0].name,
         checkinDate: checkinDate,
         checkoutDate: checkoutDate,
       };

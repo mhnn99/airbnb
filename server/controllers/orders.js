@@ -1,10 +1,11 @@
 const orderModel = require('../models/orderModel')
 const postOrder = async(req,res) =>{
     try{
-        const {userId, listingId, checkinDate, checkoutDate} = req.body
+        const {userId, listingId, checkinDate, checkoutDate, listingName} = req.body
         const order = new orderModel({
             userId,
             listingId,
+            listingName,
             checkinDate,
             checkoutDate
         })
@@ -33,4 +34,13 @@ const getOrdersByUser = async (req,res) =>{
     }
 }
 
-module.exports = {postOrder,getOrders, getOrdersByUser}
+const deleteOrders = async(req,res) =>{
+    try{
+        const order = await orderModel.findByIdAndDelete(req.params.id)
+        res.status(200).json({message:'Order deleted'})
+    }catch(err){
+        res.status(500).json({message:err.message})
+    }
+}
+
+module.exports = {postOrder,getOrders, getOrdersByUser, deleteOrders}

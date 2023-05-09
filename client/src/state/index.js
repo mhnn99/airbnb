@@ -6,7 +6,6 @@ const initialState = {
     token:null,
     initialArr:["Berlin", "Madrid", "London", "Ibiza", "Antalya", "Hurghada", "New York City", "Bora Bora", "Rome", "Tokyo", "Maldives", "Phuket"],
     cities:[],
-    bookings:[],
     search:'',
     city:'',
     searchResults:[],
@@ -43,14 +42,11 @@ export const authSlice = createSlice({
         setListings:(state,action)=>{
             state.listings = action.payload.listings
         },
-        setBookings:(state,action)=>{
-            state.bookings = [...state.bookings,action.payload]
-        },
         setFavorites:(state,action)=>{
             state.favorites = action.payload.favorites
         }
     }
 })
 
-export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setBookings, setFavorites} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setFavorites} = authSlice.actions
 export default authSlice.reducer
