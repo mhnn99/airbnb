@@ -32,3 +32,21 @@ header{
 	background-color: #1e6ab6;
 	border-radius: 10px;
 }
+
+.images {
+  border-radius: 20px;
+}
+
+
+.listing-zone {
+  margin: 0 auto;
+  padding: 30px;
+  position: relative;
+}
+
+.listing-name {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
