@@ -305,7 +305,9 @@ const Listing = () => {
             {reviews.map((review,i)=>{
             const user = users.find(user=>user.foundUser._id===review.userId)
             return<>
-            <Typography key={i}>{user?.foundUser.firstName}: {review.comment}</Typography>
+            <Box key={i}>
+            <Typography>{user?.foundUser.firstName}: {review.comment}</Typography>
+            </Box>
             </>
             })}
           </Grid>
