@@ -242,7 +242,7 @@ const Listing = () => {
               listing[0]?.images.length > 0 &&
               listing[0].images.map((image, i) => (
                 <SwiperSlide key={i}>
-                  <div>
+                  <div className="slide-image-left">
                     <img
                       src={image}
                       alt="asdf"
