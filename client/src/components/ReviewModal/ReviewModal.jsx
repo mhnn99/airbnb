@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
+import jwt_decode from "jwt-decode";
 
 const style = {
   position: "absolute",
@@ -31,8 +32,11 @@ const ReviewModal = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      const token = user ? user.token : null;
+      if(token){
+        const decodedToken = jwt_decode(token)
       const orders = await fetch(
-        `http://localhost:9000/user/orders/${user.user._id}`
+        `http://localhost:9000/user/orders/${decodedToken.userId}`
       );
       const res = await orders.json();
       const order = res.ordersByUser.find((el) =>
@@ -44,33 +48,38 @@ const ReviewModal = () => {
       } else {
         setOpen(false);
       }
+    }
     };
     fetchOrders();
-  }, [user.user._id]);
+  }, [user]);
   console.log(booking);
   const handleSubmit = async () => {
-    const reviewPost = await fetch("http://localhost:9000/reviews", {
-      method: "POST",
-      body: JSON.stringify({
-        userId: user.user._id,
-        listingId: booking.listingId,
-        comment: comment.current,
-      }),
+    const token = user ? user.token : null;
+if(token){
+  const decodedToken = jwt_decode(token)
+  const reviewPost = await fetch("http://localhost:9000/reviews", {
+    method: "POST",
+    body: JSON.stringify({
+      userId: decodedToken.userId,
+      listingId: booking.listingId,
+      comment: comment.current,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  const res = await reviewPost.json();
+  const deleteOrder = await fetch(
+    `http://localhost:9000/orders/${booking._id}`,
+    {
+      method: "DELETE",
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
-    });
-    const res = await reviewPost.json();
-    const deleteOrder = await fetch(
-      `http://localhost:9000/orders/${booking._id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      }
-    );
-    setOpen(false);
+    }
+  );
+  setOpen(false);
+}
   };
   return (
     <div>
