@@ -59,6 +59,7 @@ import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
 
 
+
 const Listing = () => {
   const amenities = [
     { id: 2, name: "Kitchen", icon: <KitchenIcon /> },
@@ -215,9 +216,9 @@ const Listing = () => {
     return false;
   };
   return (
-    <>
+    <div className="listing-zone">
       {listing.length > 0 && (
-        <Typography sx={{ fontSize: "32px" }}>{listing[0].name}</Typography>
+        <Typography sx={{ fontSize: "32px" }} className="listing-name">{listing[0].name}</Typography>
       )}
       <Box sx={{ marginTop: 4 }}>
         <Container>
@@ -237,12 +238,13 @@ const Listing = () => {
               modifier: 1,
               slideShadows: true,
             }}
+            className="images-div" 
           >
             {listing[0]?.images &&
               listing[0]?.images.length > 0 &&
               listing[0].images.map((image, i) => (
                 <SwiperSlide key={i}>
-                  <div className="slide-image-left">
+                  <div>
                     <img
                       src={image}
                       alt="asdf"
@@ -251,6 +253,7 @@ const Listing = () => {
                         width: "100%",
                         objectFit: "cover",
                       }}
+                      className="images"
                     />
                   </div>
                 </SwiperSlide>
@@ -259,7 +262,7 @@ const Listing = () => {
         </Container>
         <Grid container spacing={3} sx={{ marginTop: 3 }}>
           <Grid item xs={12} md={6}>
-            <Typography sx={{ fontSize: "28px", marginTop: 2 }}>
+            <Typography sx={{ fontSize: "28px", marginTop: 2}}>
               {listing[0]?.type}
             </Typography>
             <Typography
@@ -267,14 +270,24 @@ const Listing = () => {
             >
               Rooms
             </Typography>
-            <Box sx={{ display: "flex", marginTop: 2 }}>
-              <Typography>Bedrooms:{listing[0]?.bedrooms} </Typography>
-              <Typography sx={{ marginLeft: 1 }}>
-                Bathrooms:{listing[0]?.bathrooms}{" "}
-              </Typography>
-              <Typography sx={{ marginLeft: 1 }}>
-                Beds:{listing[0]?.beds}
-              </Typography>
+            <Box sx={{ display: "flex", marginTop: 2}}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={3} sx={{ border: "1px solid", borderRadius: "5px", height: "60px", display: "flex", justifyContent: "space-evenly", alignItems: "center", margin: "10px", padding: "15px" }}>
+                  <Typography sx={{fontWeight: 700}}>Bedrooms: {listing[0]?.bedrooms} </Typography>
+                </Grid>
+                <Grid item xs={12} md={3} sx={{ border: "1px solid", borderRadius: "5px", height: "60px", display: "flex", justifyContent: "space-evenly", alignItems: "center", margin: "10px", padding: "15px"}}>
+                  <BathroomIcon sx={{ fontSize: "42px"}} /> 
+                  <Typography sx={{ marginLeft: 1, fontWeight: 700}}>
+                  {listing[0]?.bathrooms}{" "}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={3} sx={{ border: "1px solid", borderRadius: "5px", height: "60px", display: "flex", justifyContent: "space-evenly", alignItems: "center", margin: "10px", padding: "15px"}}>
+                  <BedIcon sx={{ fontSize: "42px"}} />
+                  <Typography sx={{ marginLeft: 1, fontWeight: 700 }}>
+                  {listing[0]?.beds}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Box>
             <Typography
               sx={{
@@ -310,35 +323,48 @@ const Listing = () => {
             })}
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card>
+            <Card sx={{ marginTop: 14}}>
               <CardContent>
-                <Typography sx={{ fontSize: "28px", textAlign: "center" }}>
+                <Typography sx={{ fontSize: "28px", textAlign: "center", marginTop: 2}}>
                   Reservation Details
                 </Typography>
-                <Box sx={{ margin: 4 }}>
-                  <Typography>Check in date:</Typography>
-                  <DatePicker
-                    shouldDisableDate={isBooked}
-                    value={checkinDate}
-                    onChange={(newValue) => {
-                      setCheckinDate(dayjs(newValue));
-                      setCheckoutDate(newValue.add(1, "day"));
-                    }}
-                    disablePast
-                  />
-                </Box>
-                <Box sx={{ margin: 4 }}>
-                  <Typography>Checkout date:</Typography>
-                  <DatePicker
-                    value={checkoutDate}
-                    shouldDisableDate={isBooked}
-                    onChange={(newValue) => setCheckoutDate(dayjs(newValue))}
-                    disablePast
-                  />
-                </Box>
+                <Grid 
+                  container 
+                  spacing={1}
+                  sx={{ margin: "auto"}}
+                >
+                  <Grid item xs={12} md={6}>
+                    <Box fullWidth sx={{ marginTop: 2}}>
+                      <Typography>Check in date:</Typography>
+                      <DatePicker
+                        shouldDisableDate={isBooked}
+                        value={checkinDate}
+                        onChange={(newValue) => {
+                          setCheckinDate(dayjs(newValue));
+                          setCheckoutDate(newValue.add(1, "day"));
+                        }}
+                        disablePast
+                        sx={{ width: "95%" }}
+
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Box fullWidth sx={{ marginTop: 2 }}>
+                      <Typography>Checkout date:</Typography>
+                      <DatePicker
+                        value={checkoutDate}
+                        shouldDisableDate={isBooked}
+                        onChange={(newValue) => setCheckoutDate(dayjs(newValue))}
+                        disablePast
+                        sx={{ width: "95%" }}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
               </CardContent>
               <CardActions>
-                <Button fullWidth onClick={() => handleSubmit()}>
+                <Button fullWidth onClick={() => handleSubmit()} sx={{ border: "1px solid", fontWeight: 600 }}>
                   Book now
                 </Button>
               </CardActions>
@@ -346,7 +372,7 @@ const Listing = () => {
           </Grid>
         </Grid>
       </Box>
-    </>
+    </div>
   );
 };
 
