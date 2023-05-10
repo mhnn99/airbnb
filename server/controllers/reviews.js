@@ -15,4 +15,13 @@ const reviewPost = async(req,res) =>{
     }
 }
 
-module.exports = {reviewPost}
+const getReviews = async(req,res) =>{
+    try{
+        const foundReviews = await reviewModel.find({listingId:req.params.id})
+        res.status(200).json({foundReviews})
+    }catch(err){
+        res.status(500).json({message:err.message})
+    }
+}
+
+module.exports = {reviewPost, getReviews}

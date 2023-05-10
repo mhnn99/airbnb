@@ -57,7 +57,7 @@ import BathroomIcon from "@mui/icons-material/Bathroom";
 import RouteIcon from "@mui/icons-material/Route";
 import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
-import state from "../../state";
+
 
 const Listing = () => {
   const amenities = [
@@ -134,6 +134,8 @@ const Listing = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const [listing, setListing] = useState([]);
+  const [reviews,setReviews] = useState([])
+  const [users,setUsers] = useState([])
   const { id } = useParams();
   const [checkinDate, setCheckinDate] = useState(null);
   const [checkoutDate, setCheckoutDate] = useState(null);
@@ -149,11 +151,19 @@ const Listing = () => {
     const fetchOrders = async () => {
       const orders = await fetch(`http://localhost:9000/orders/${id}`);
       const res = await orders.json();
+      const reviews = await fetch(`http://localhost:9000/reviews/${id}`)
+      const foundReviews = await reviews.json()
+      if(foundReviews){
+        const getUser = await Promise.all(foundReviews.foundReviews.map(foundReview=>
+          fetch(`http://localhost:9000/users/${foundReview.userId}`).then((res) => res.json())))
+          setUsers(getUser)
+      }
       setOrders(res);
+      setReviews(foundReviews.foundReviews)
     };
     fetchOrders();
   }, [id, listings.results]);
-  console.log(orders);
+  console.log(users);
   const amenitiesList = listing[0]?.amenityIds
     .filter((el) => amenities.map((el) => el.id).includes(el))
     .map((el) => ({
@@ -283,6 +293,21 @@ const Listing = () => {
                 </Grid>
               ))}
             </Grid>
+            <Typography
+              sx={{
+                marginTop: 2,
+                fontSize: "20px",
+                color: theme.palette.secondary.dark,
+              }}
+            >
+              Reviews
+            </Typography>
+            {reviews.map((review,i)=>{
+            const user = users.find(user=>user.foundUser._id===review.userId)
+            return<>
+            <Typography key={i}>{user?.foundUser.firstName}: {review.comment}</Typography>
+            </>
+            })}
           </Grid>
           <Grid item xs={12} md={6}>
             <Card>
