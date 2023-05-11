@@ -3,6 +3,8 @@ import jwt_decode from "jwt-decode";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useRef } from "react";
 import { TextField, Typography } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import CardHeader from "@mui/material/CardHeader";
 import { useEffect } from "react";
 import { Grid, Box } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
@@ -57,8 +59,6 @@ import BathroomIcon from "@mui/icons-material/Bathroom";
 import RouteIcon from "@mui/icons-material/Route";
 import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
-
-
 
 const Listing = () => {
   const amenities = [
@@ -133,10 +133,10 @@ const Listing = () => {
   ];
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [listing, setListing] = useState([]);
-  const [reviews,setReviews] = useState([])
-  const [users,setUsers] = useState([])
+  const [reviews, setReviews] = useState([]);
+  const [users, setUsers] = useState([]);
   const { id } = useParams();
   const [checkinDate, setCheckinDate] = useState(null);
   const [checkoutDate, setCheckoutDate] = useState(null);
@@ -152,15 +152,20 @@ const Listing = () => {
     const fetchOrders = async () => {
       const orders = await fetch(`http://localhost:9000/orders/${id}`);
       const res = await orders.json();
-      const reviews = await fetch(`http://localhost:9000/reviews/${id}`)
-      const foundReviews = await reviews.json()
-      if(foundReviews){
-        const getUser = await Promise.all(foundReviews.foundReviews.map(foundReview=>
-          fetch(`http://localhost:9000/users/${foundReview.userId}`).then((res) => res.json())))
-          setUsers(getUser)
+      const reviews = await fetch(`http://localhost:9000/reviews/${id}`);
+      const foundReviews = await reviews.json();
+      if (foundReviews) {
+        const getUser = await Promise.all(
+          foundReviews.foundReviews.map((foundReview) =>
+            fetch(`http://localhost:9000/users/${foundReview.userId}`).then(
+              (res) => res.json()
+            )
+          )
+        );
+        setUsers(getUser);
       }
       setOrders(res);
-      setReviews(foundReviews.foundReviews)
+      setReviews(foundReviews.foundReviews);
     };
     fetchOrders();
   }, [id, listings.results]);
@@ -171,7 +176,7 @@ const Listing = () => {
       name: amenities[amenities.findIndex((element) => element.id === el)].name,
       icon: amenities[amenities.findIndex((element) => element.id === el)].icon,
     }));
- console.log(listing[0]?.name)
+  console.log(listing[0]);
   const handleSubmit = async () => {
     const token = user ? user.token : null;
 
@@ -180,7 +185,7 @@ const Listing = () => {
       const order = {
         userId: decodedToken.userId,
         listingId: id,
-        listingName:listing[0].name,
+        listingName: listing[0].name,
         checkinDate: checkinDate,
         checkoutDate: checkoutDate,
       };
@@ -216,9 +221,11 @@ const Listing = () => {
     return false;
   };
   return (
-    <div className="listing-zone">
+    <>
       {listing.length > 0 && (
-        <Typography sx={{ fontSize: "32px" }} className="listing-name">{listing[0].name}</Typography>
+        <Typography sx={{ fontSize: "32px", textAlign: "center" }}>
+          {listing[0].name}
+        </Typography>
       )}
       <Box sx={{ marginTop: 4 }}>
         <Container>
@@ -238,7 +245,7 @@ const Listing = () => {
               modifier: 1,
               slideShadows: true,
             }}
-            className="images-div" 
+            className="images-div"
           >
             {listing[0]?.images &&
               listing[0]?.images.length > 0 &&
@@ -260,35 +267,35 @@ const Listing = () => {
               ))}
           </Swiper>
         </Container>
+        <Typography sx={{ fontSize: "28px", marginTop: 2 }}>
+          {listing[0]?.type}
+        </Typography>
+        <Typography
+          sx={{ fontSize: "20px", color: theme.palette.secondary.dark }}
+        >
+          Rooms
+        </Typography>
+        <Box sx={{ marginTop: 2 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={4}>
+              <Container sx={{border:'1px solid', padding:'15px', textAlign:'center'}}>
+                <Typography>Bedrooms: {listing[0]?.bedrooms}</Typography>
+              </Container>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Container sx={{border:'1px solid', padding:'15px', justifyContent:'center', display:'flex'}}>
+              <BathroomIcon/><Typography>: {listing[0]?.bedrooms}</Typography>
+              </Container>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Container sx={{border:'1px solid', padding:'15px', justifyContent:'center', display:'flex'}}>
+                <BedIcon/> <Typography>: {listing[0]?.bedrooms}</Typography>
+              </Container>
+            </Grid>
+          </Grid>
+        </Box>
         <Grid container spacing={3} sx={{ marginTop: 3 }}>
           <Grid item xs={12} md={6}>
-            <Typography sx={{ fontSize: "28px", marginTop: 2}}>
-              {listing[0]?.type}
-            </Typography>
-            <Typography
-              sx={{ fontSize: "20px", color: theme.palette.secondary.dark }}
-            >
-              Rooms
-            </Typography>
-            <Box sx={{ display: "flex", marginTop: 2}}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={3} sx={{ border: "1px solid", borderRadius: "5px", height: "60px", display: "flex", justifyContent: "space-evenly", alignItems: "center", margin: "10px", padding: "15px" }}>
-                  <Typography sx={{fontWeight: 700}}>Bedrooms: {listing[0]?.bedrooms} </Typography>
-                </Grid>
-                <Grid item xs={12} md={3} sx={{ border: "1px solid", borderRadius: "5px", height: "60px", display: "flex", justifyContent: "space-evenly", alignItems: "center", margin: "10px", padding: "15px"}}>
-                  <BathroomIcon sx={{ fontSize: "42px"}} /> 
-                  <Typography sx={{ marginLeft: 1, fontWeight: 700}}>
-                  {listing[0]?.bathrooms}{" "}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={3} sx={{ border: "1px solid", borderRadius: "5px", height: "60px", display: "flex", justifyContent: "space-evenly", alignItems: "center", margin: "10px", padding: "15px"}}>
-                  <BedIcon sx={{ fontSize: "42px"}} />
-                  <Typography sx={{ marginLeft: 1, fontWeight: 700 }}>
-                  {listing[0]?.beds}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Box>
             <Typography
               sx={{
                 marginTop: 2,
@@ -306,37 +313,18 @@ const Listing = () => {
                 </Grid>
               ))}
             </Grid>
-            <Typography
-              sx={{
-                marginTop: 2,
-                fontSize: "20px",
-                color: theme.palette.secondary.dark,
-              }}
-            >
-              Reviews
-            </Typography>
-            {reviews.map((review,i)=>{
-            const user = users.find(user=>user.foundUser._id===review.userId)
-            return<>
-            <Box key={i}>
-            <Typography>{user?.foundUser.firstName}: {review.comment}</Typography>
-            </Box>
-            </>
-            })}
           </Grid>
           <Grid item xs={12} md={6}>
-            <Card sx={{ marginTop: 14}}>
+            <Card sx={{ marginTop: 2 }}>
               <CardContent>
-                <Typography sx={{ fontSize: "28px", textAlign: "center", marginTop: 2}}>
+                <Typography
+                  sx={{ fontSize: "28px", textAlign: "center", marginTop: 2 }}
+                >
                   Reservation Details
                 </Typography>
-                <Grid 
-                  container 
-                  spacing={1}
-                  sx={{ margin: "auto"}}
-                >
+                <Grid container spacing={1} sx={{ margin: "auto" }}>
                   <Grid item xs={12} md={6}>
-                    <Box fullWidth sx={{ marginTop: 2}}>
+                    <Box fullWidth sx={{ marginTop: 2 }}>
                       <Typography>Check in date:</Typography>
                       <DatePicker
                         shouldDisableDate={isBooked}
@@ -347,7 +335,6 @@ const Listing = () => {
                         }}
                         disablePast
                         sx={{ width: "95%" }}
-
                       />
                     </Box>
                   </Grid>
@@ -357,7 +344,9 @@ const Listing = () => {
                       <DatePicker
                         value={checkoutDate}
                         shouldDisableDate={isBooked}
-                        onChange={(newValue) => setCheckoutDate(dayjs(newValue))}
+                        onChange={(newValue) =>
+                          setCheckoutDate(dayjs(newValue))
+                        }
                         disablePast
                         sx={{ width: "95%" }}
                       />
@@ -366,15 +355,74 @@ const Listing = () => {
                 </Grid>
               </CardContent>
               <CardActions>
-                <Button fullWidth onClick={() => handleSubmit()} sx={{ border: "1px solid", fontWeight: 600 }}>
+                <Button
+                  fullWidth
+                  onClick={() => handleSubmit()}
+                  sx={{ border: "1px solid", fontWeight: 600 }}
+                >
                   Book now
                 </Button>
               </CardActions>
             </Card>
           </Grid>
         </Grid>
+        <Box sx={{ marginTop: 2 }}>
+          <Typography
+            sx={{
+              fontSize: "20px",
+              color: theme.palette.secondary.dark,
+            }}
+          >
+            Reviews
+          </Typography>
+          <Grid container spacing={3}>
+            {reviews.map((review, i) => {
+              const user = users.find(
+                (user) => user.foundUser._id === review.userId
+              );
+              const months = [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ];
+              return (
+                <>
+                  <Grid item xs={12} md={4} key={i}>
+                    <Card>
+                      <CardHeader
+                        avatar={
+                          <Avatar aria-label="recipe">
+                            {user.foundUser.firstName[0]}
+                          </Avatar>
+                        }
+                        title={user.foundUser.firstName}
+                        subheader={`${
+                          months[dayjs(review.createdAt).month()]
+                        } ${dayjs(review.createdAt).year()}`}
+                      />
+                      <CardContent>
+                        <Typography variant="body2" color="text.secondary">
+                          {review.comment}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </>
+              );
+            })}
+          </Grid>
+        </Box>
       </Box>
-    </div>
+    </>
   );
 };
 
