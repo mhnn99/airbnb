@@ -24,4 +24,13 @@ const getOrders = async (req,res) =>{
     }
 }
 
-module.exports = {postOrder,getOrders}
+const getOrdersByUser = async (req,res) =>{
+    try{
+        const ordersByUser = await orderModel.find({userId:req.params.id})
+        res.status(201).json({ordersByUser})
+    }catch(err){
+        res.status(501).json({message:err.message})
+    }
+}
+
+module.exports = {postOrder,getOrders, getOrdersByUser}

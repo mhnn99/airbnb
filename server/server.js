@@ -11,7 +11,7 @@ const authFunc = require('./controllers/auth')
 
 const {register, login, changePassword} = authFunc;
 const orderFunc = require('./controllers/orders')
-const {postOrder, getOrders} = orderFunc
+const {postOrder, getOrders, getOrdersByUser} = orderFunc
 
 
 if (!MONGO_URL) {
@@ -20,11 +20,17 @@ if (!MONGO_URL) {
   }
 
 mongoose.connect(MONGO_URL)
-
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Accept-Patch');
+  next();
+});
 app.post('/auth/register',register)
 app.post('/auth/login', login)
 app.post('/orders',postOrder)
 app.get('/orders/:id',getOrders)
 app.patch('/change', changePassword)
+app.get('/user/orders/:id', getOrdersByUser)
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))
 
