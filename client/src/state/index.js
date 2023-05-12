@@ -9,7 +9,8 @@ const initialState = {
     search:'',
     city:'',
     searchResults:[],
-    listings:[]
+    listings:[],
+    favorites:[]
 }
 
 export const authSlice = createSlice({
@@ -43,10 +44,13 @@ export const authSlice = createSlice({
             state.listings = action.payload.listings
         },
         setFavorites:(state,action)=>{
-            state.favorites = action.payload.favorites
+            state.favorites = [...state.favorites,{city:action.payload.city,favorites:action.payload.favorites}]
+        },
+        setRemoveFavs:(state,action)=>{
+            state.favorites = state.favorites.filter(fav=>fav.favorites.id!==action.payload.id)
         }
     }
 })
 
-export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setFavorites} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setFavorites, setRemoveFavs} = authSlice.actions
 export default authSlice.reducer

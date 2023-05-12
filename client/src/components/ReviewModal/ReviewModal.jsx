@@ -52,7 +52,7 @@ const ReviewModal = () => {
     };
     fetchOrders();
   }, [user]);
-  console.log(booking);
+
   const handleSubmit = async () => {
     const token = user ? user.token : null;
 if(token){

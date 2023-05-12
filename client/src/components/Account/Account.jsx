@@ -13,7 +13,17 @@ const Account = () => {
     token: state.token,
     mode: state.mode,
   }));
-
+const favorites = useSelector(state=>state.favorites)
+const groupedFavs = favorites.reduce((a,fav)=>{
+  const key = fav.city 
+  if(a[key]==null)a[key]=[]
+  a[key].push(fav.favorites)
+  return a
+},{})
+useEffect(()=>{
+  
+})
+console.log(groupedFavs)
   return (
     <>
       <Navbar />
