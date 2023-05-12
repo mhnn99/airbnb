@@ -14,10 +14,10 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
-import { Button } from "@material-ui/core";
 import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
 const Listings = () => {
   const dispatch = useDispatch();
@@ -52,10 +52,17 @@ dispatch(setRemoveFavs({id:listings.results[listing].id}))
 setOpen(true)
 message.current = 'Removed from favorites'
   };
-  const actions = [
-    { icon: <HeartBrokenIcon />, name: "Remove from Favorites" },
+
+  const addIcons = [
     { icon: <FavoriteIcon />, name: "Add to Favorites" },
+    { icon: <EditCalendarIcon />, name: "Check availability" },
   ];
+
+  const removeIcons = [
+    { icon: <HeartBrokenIcon />, name: "Remove from Favorites" },
+    { icon: <EditCalendarIcon />, name: "Check availability" },
+  ];
+  
   useEffect(() => {
     const fetchListings = async () => {
       const url = `https://airbnb13.p.rapidapi.com/search-location?location=${city}&checkin=2023-09-16&checkout=2023-09-17&adults=1&children=0&infants=0&pets=0&page=1&currency=USD`;
@@ -121,19 +128,23 @@ message.current = 'Removed from favorites'
                         {favorites.find(
                           (fav) => fav.favorites.id === listing.id
                         ) ? (
-                          <SpeedDialAction
-                            icon={<HeartBrokenIcon />}
-                            onClick={() => {
-                              removeFav(i);
-                            }}
-                          />
+                          removeIcons.map((action) => (
+                            <SpeedDialAction
+                              key={action.name}
+                              icon={action.icon}
+                              tooltipTitle={action.name}
+                              onClick={action.name==="Remove from Favorites" ? (()=>removeFav(i)):(() => navigate(`/location/${listing.id}`))}
+                            />
+                          ))
                         ) : (
-                          <SpeedDialAction
-                            icon={<FavoriteIcon />}
-                            onClick={() => {
-                              addToFav(i);
-                            }}
-                          />
+                          addIcons.map((action) => (
+                            <SpeedDialAction
+                              key={action.name}
+                              icon={action.icon}
+                              tooltipTitle={action.name}
+                              onClick={action.name==="Add to Favorites" ? (()=>addToFav(i)):(() => navigate(`/location/${listing.id}`))}
+                            />
+                          ))
                         )}
 
                         {open && (
@@ -210,12 +221,6 @@ message.current = 'Removed from favorites'
                           {listing.price.total} {listing.price.currency} per
                           night
                         </Typography>
-                        <Button
-                          variant="contained"
-                          onClick={() => navigate(`/location/${listing.id}`)}
-                        >
-                          Check availability
-                        </Button>
                       </Box>
                     </CardContent>
                   </Card>
