@@ -13,7 +13,7 @@ const {reviewPost, getReviews} = reviewFunc
 const {register, login, changePassword} = authFunc;
 const orderFunc = require('./controllers/orders')
 const {postOrder, getOrders, getOrdersByUser, deleteOrders} = orderFunc
-const {getUser,addToFav} = require('./controllers/users')
+const {getUser,addToFav,removeFav} = require('./controllers/users')
 
 
 if (!MONGO_URL) {
@@ -34,6 +34,7 @@ app.post('/orders',postOrder)
 app.get('/orders/:id',getOrders)
 app.delete('/orders/:id', deleteOrders)
 app.patch('/change', changePassword)
+app.patch('/favorites/:id', removeFav)
 app.get('/user/orders/:id', getOrdersByUser)
 app.post('/reviews',reviewPost)
 app.get('/reviews/:id', getReviews)

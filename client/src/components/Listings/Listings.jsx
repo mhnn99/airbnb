@@ -64,14 +64,32 @@ const Listings = () => {
           message.current = err.message
         }
       } 
+      setOpen(true);
     }
-    setOpen(true);
   };
 
-  const removeFav = (listing) => {
-dispatch(setRemoveFavs({id:listings.results[listing].id}))
-setOpen(true)
-message.current = 'Removed from favorites'
+
+
+  const removeFav = async (listing) => {
+    const token = userToken? userToken : null
+    if(token){
+      dispatch(setRemoveFavs({id:listings.results[listing].id}))
+      try{
+        const fetchFav = await fetch(`http://localhost:9000/favorites/${jwt_decode(token).userId}`,{
+            method:'PATCH',
+            body:JSON.stringify({ id: listings.results[listing].id }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          const res = await fetchFav.json()
+          message.current= res.message
+      }catch(err){
+        message.current = err.message
+      }
+      setOpen(true);
+    } 
   };
 
   const addIcons = [

@@ -31,8 +31,28 @@ const addToFav = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+const removeFav = async (req, res) => {
+  try {
+    const user = await userModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: {favorites: {favorites: req.body.id}} },
+      { new: true }
+      );
+      
+      console.log(req.body.id)
+    if (!user) {
+      // User not found
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: 'Listing removed from favorites', user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
   
   
   
   
-module.exports = {getUser, addToFav}
+module.exports = {getUser, addToFav, removeFav}

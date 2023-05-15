@@ -148,7 +148,11 @@ const Listing = () => {
   }));
 
   useEffect(() => {
-    setListing(listings.results.filter((el) => el.id === id));
+    if(listings.results){
+      setListing(listings.results.filter((el) => el.id === id));
+    }else{
+      setListing((Object.values(listings).flat().filter((el)=>el.id===id)))
+    }
     const fetchOrders = async () => {
       const orders = await fetch(`http://localhost:9000/orders/${id}`);
       const res = await orders.json();
@@ -169,14 +173,14 @@ const Listing = () => {
     };
     fetchOrders();
   }, [id, listings.results]);
-  console.log(users);
+  // console.log(users);
   const amenitiesList = listing[0]?.amenityIds
     .filter((el) => amenities.map((el) => el.id).includes(el))
     .map((el) => ({
       name: amenities[amenities.findIndex((element) => element.id === el)].name,
       icon: amenities[amenities.findIndex((element) => element.id === el)].icon,
     }));
-  console.log(listing[0]);
+  // console.log(listing[0]);
   const handleSubmit = async () => {
     const token = user ? user.token : null;
 

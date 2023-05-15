@@ -45,7 +45,7 @@ const Navbar = () => {
   const MyHome = React.forwardRef((props, ref) => (
     <RouterLink ref={ref} to="/" {...props} />
   ));
-  console.log(isLoggedIn.token);
+  // console.log(isLoggedIn.token);
   const dispatch = useDispatch();
   const isDarkMode = isLoggedIn.mode === "dark";
 

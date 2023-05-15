@@ -1,17 +1,27 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../Navbar/Navbar";
 import { Card, Typography, Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
+import { useNavigate } from "react-router-dom";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import { CardActionArea } from "@mui/material";
+import { setListings } from "../../state";
+import Listings from "../Listings/Listings";
 
 const Account = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => ({
     user: state.user,
     token: state.token,
     mode: state.mode,
   }));
   const favorites = useSelector((state) => state.favorites);
+  const listings = useSelector((state) => state.listings)
   
   const groupedFavs = useMemo(() => {
     return favorites.flat().reduce((a, fav) => {
@@ -46,12 +56,12 @@ const Account = () => {
           })
         );
 
-        setFavCities(fetchedCities.reduce((a, b) => {
+        dispatch(setListings({listings: fetchedCities.reduce((a, b) => {
           const key = b.city;
           if (a[key] == null) a[key] = [];
           a[key] = b.fav;
           return a;
-        }, {}));
+        }, {})}));
         setIsLoading(false);
       } catch (err) {
         setError(err.message);
@@ -61,6 +71,7 @@ const Account = () => {
 
     fetchCities();
   }, [groupedFavs]);
+  console.log(listings)
 
   return (
     <>
@@ -84,18 +95,52 @@ const Account = () => {
       ) : error ? (
         <div>Error: {error}</div>
       ) : (
-        <div>
-          {Object.entries(favCities).map(([city, fav]) => (
+        <Box sx={{m:5}}>
+           <Typography variant="h4" align="left">
+            Favourite locations:
+          </Typography>
+          {Object.entries(listings).map(([city, value]) => (
             <div key={city}>
-              <h3>{city}</h3>
-              {fav.map((listing) => (
-                <Card key={listing.id}>
-                  {/* Render your listing card here */}
-                </Card>
-              ))}
+              <Typography variant="h4" align="center" sx={{ p: 5 }}>
+                {city}
+              </Typography>
+              <Grid container spacing={4} sx={{display:"flex", justifyContent:"center"}}>
+                {value.map((location, i) => (
+                  <Grid item xs={12} md={4} sx={{ display: "flex", justifyContent: "center" }} key={i} >
+                    <Card sx={{ maxWidth: 345 }} onClick={() => navigate(`/location/${location.id}`)}>
+                      <CardActionArea>
+                        <HeartBrokenIcon style={{
+                          color:"black",
+                          height: "3rem",
+                          width:"3rem",
+                          marginTop: "7px",
+                          position: "absolute",
+                          top: 1,
+                          right: 10,
+                          zIndex: 2,
+                        }}/>
+                        <CardMedia
+                          component="img"
+                          height="140"
+                          image={location.images[0]}
+                          alt="green iguana"
+                          />
+                        <CardContent>
+                          <Typography gutterBottom variant="h5" component="div">
+                            {location.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {location.address}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             </div>
           ))}
-        </div>
+        </Box>
       )}
 </>
   )}
