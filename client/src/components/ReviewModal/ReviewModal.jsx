@@ -8,14 +8,13 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    maxWidth: 'xs',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -27,6 +26,7 @@ const ReviewModal = () =>{
     const userBookings = useSelector(state=>state.bookings)
     const [open,setOpen] = useState(false)
     const [booking,setBooking] = useState({})
+    const comment = React.useRef('')
 
     useEffect(()=>{
         const fetchOrders = async () =>{
@@ -45,7 +45,20 @@ const ReviewModal = () =>{
         fetchOrders()
     },[user.user._id, userBookings])
     console.log(userBookings)
-  
+    const handleSubmit = async()=>{
+        const reviewPost = await fetch('http://localhost:9000/reviews',{
+            method:'POST',
+            body:JSON.stringify({
+                userId:user.user._id,
+                listingId:booking.id,
+                comment:comment.current
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",}
+        })
+        const res = await reviewPost.json()
+        setOpen(false)
+    }
     return (
         <div>
         <Modal
@@ -58,13 +71,11 @@ const ReviewModal = () =>{
             <Typography id="modal-modal-title" variant="h6" component="h2">
               How was your stay at {booking.name}?
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Review
-            </Typography>
+
             <Box sx={{ mt: 2 }}>
-              <TextField id="outlined-multiline-flexible" label="Multiline" multiline maxRows={4} />
-              <Button type="submit">Send</Button>
+              <TextField id="outlined-multiline-flexible" label="Review" multiline maxRows={4} fullWidth onChange={(e)=>comment.current=e.target.value} />
             </Box>
+              <Button type="submit" onClick={()=>handleSubmit()}>Send</Button>
           </Box>
         </Modal>
       </div>

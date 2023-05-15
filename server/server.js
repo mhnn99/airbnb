@@ -8,7 +8,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 const {MONGO_URL,PORT} = process.env
 const authFunc = require('./controllers/auth')
-
+const reviewFunc = require('./controllers/reviews')
+const {reviewPost} = reviewFunc
 const {register, login, changePassword} = authFunc;
 const orderFunc = require('./controllers/orders')
 const {postOrder, getOrders, getOrdersByUser} = orderFunc
@@ -32,5 +33,6 @@ app.post('/orders',postOrder)
 app.get('/orders/:id',getOrders)
 app.patch('/change', changePassword)
 app.get('/user/orders/:id', getOrdersByUser)
+app.post('/reviews',reviewPost)
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))
 
