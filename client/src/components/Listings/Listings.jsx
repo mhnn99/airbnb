@@ -60,11 +60,15 @@ const Listings = () => {
           const res = await postFav.json()
           console.log(res)
           message.current = "Listing added to favorites!";
+          setOpen(true);
         }catch(err){
           message.current = err.message
         }
-      } 
-      setOpen(true);
+      }
+    }else{
+        navigate(`/login`)
+        console.log('asdasdasd')
+      
     }
   };
 
@@ -129,10 +133,10 @@ const Listings = () => {
     <>
       {listings.results?.length > 0 ? (
         <>
-          <h1>
+          <Typography variant="h3" align="center" sx={{m:5}}>
             {city.split("%20").join(" ").split("%2C").join(",")}, found{" "}
             {listings.results?.length} properties
-          </h1>
+          </Typography>
           <Box
             sx={{
               p: 2,
