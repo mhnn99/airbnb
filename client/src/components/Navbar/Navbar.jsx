@@ -74,7 +74,7 @@ const Navbar = () => {
               textDecoration: "none",
             }}
           >
-            {isLoggedIn.user.firstName}
+            {/* {isLoggedIn.user.firstName} */}
           </Typography>
         </Box>
         <DestinationInput />
@@ -166,7 +166,7 @@ const Navbar = () => {
               textDecoration: "none",
           }}
         >
-          Travel Website
+          {/* Travel Website */}
         </Typography>
         </Box>
         <DestinationInput />
