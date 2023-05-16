@@ -11,7 +11,7 @@ import { usePlainNavigationMenuStyles } from '@mui-treasury/styles/navigationMen
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
-
+import { Paper } from '@mui/material';
 
 const useStyles = makeStyles(({ typography, palette, breakpoints }) => ({
   legalLink: {
@@ -44,35 +44,28 @@ const useStyles = makeStyles(({ typography, palette, breakpoints }) => ({
 const Footer = React.memo(function NeptuneAppFooter() {
   const classes = useStyles();
   return (
-    <div className='footer'>
-      <Box width={'100%'}>
-        <Container>
-          <Box pt={8} pb={2}>
-            <Row wrap>
-              <Item grow={2}>
-                <NavMenu className="navMenu">
-                    <NavItem>About</NavItem>
-                    <NavItem>Customer Care</NavItem>
-                    <NavItem>Services</NavItem>
-                </NavMenu>
-              </Item>
-              <Item className='socialMedia'>
-                <Box textAlign={'center'}>
-                  <FacebookIcon sx={{color: "white"}}/>
-                  <InstagramIcon sx={{color: "white"}}/>
-                  <TwitterIcon sx={{color: "white"}}/>
-                </Box>
-              </Item>
-            </Row>
-          </Box>
-          <Box className='bottom-text'>
-            <Typography>
-                Designed by Anonymous © Fake Studio 2023 All right reserved
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-    </div>
+    <Paper sx={{marginTop: 'calc(10% + 60px)',
+    width: '100%',
+    position: 'static',
+    bottom: 0,
+    width: '100%',
+    border: "none",
+    }} component="footer" square variant="outlined">
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            flexGrow: 1,
+            justifyContent: "center",
+            display: "flex",
+            mb: 2,
+          }}
+        >
+          <Typography color="initial" align='center'>
+            Copyright ©2023. [MihneaRazvanAlex] Limited
+          </Typography>
+        </Box>
+      </Container>
+    </Paper>
   );
 });
 

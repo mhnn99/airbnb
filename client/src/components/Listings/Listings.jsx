@@ -18,8 +18,10 @@ import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import jwt_decode from "jwt-decode";
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import Footer from "../Footer/Footer";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import Button from '@mui/material/Button';
 
 
 const Listings = () => {
@@ -30,73 +32,76 @@ const Listings = () => {
   const favorites = useSelector((state) => state.favorites);
   const message = useRef("");
   const [open, setOpen] = useState(false);
-  const userToken = useSelector(state=>state.token)
-  console.log(favorites.flat())
+  const userToken = useSelector((state) => state.token);
+  const [sortUp, setSortUp] = useState([]);
+  console.log(favorites.flat());
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  
-
   const addToFav = async (listing) => {
-    const token = userToken? userToken : null
-    if(token){
-      const decodedToken = jwt_decode(token)
+    const token = userToken ? userToken : null;
+    if (token) {
+      const decodedToken = jwt_decode(token);
       if (
-        !favorites.find(
-          (fav) => fav.favorites === listings.results[listing].id
-          )
-          ) {
+        !favorites.find((fav) => fav.favorites === listings.results[listing].id)
+      ) {
         dispatch(
           setFavorites({ city: city, favorites: listings.results[listing].id })
         );
-        try{
-          const postFav = await fetch(`http://localhost:9000/favorites/${decodedToken.userId}`,{
-            method:'POST',
-            body:JSON.stringify({ city: city, favorites: listings.results[listing].id }),
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          const res = await postFav.json()
-          console.log(res)
+        try {
+          const postFav = await fetch(
+            `http://localhost:9000/favorites/${decodedToken.userId}`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                city: city,
+                favorites: listings.results[listing].id,
+              }),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const res = await postFav.json();
+          console.log(res);
           message.current = "Listing added to favorites!";
           setOpen(true);
-        }catch(err){
-          message.current = err.message
+        } catch (err) {
+          message.current = err.message;
         }
       }
-    }else{
-        navigate(`/login`)
-        console.log('asdasdasd')
-      
+    } else {
+      navigate(`/login`);
+      console.log("asdasdasd");
     }
   };
 
-
-
   const removeFav = async (listing) => {
-    const token = userToken? userToken : null
-    if(token){
-      dispatch(setRemoveFavs({id:listings.results[listing].id}))
-      try{
-        const fetchFav = await fetch(`http://localhost:9000/favorites/${jwt_decode(token).userId}`,{
-            method:'PATCH',
-            body:JSON.stringify({ id: listings.results[listing].id }),
+    const token = userToken ? userToken : null;
+    if (token) {
+      dispatch(setRemoveFavs({ id: listings.results[listing].id }));
+      try {
+        const fetchFav = await fetch(
+          `http://localhost:9000/favorites/${jwt_decode(token).userId}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({ id: listings.results[listing].id }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",
               Authorization: `Bearer ${token}`,
             },
-          })
-          const res = await fetchFav.json()
-          message.current= res.message
-      }catch(err){
-        message.current = err.message
+          }
+        );
+        const res = await fetchFav.json();
+        message.current = res.message;
+      } catch (err) {
+        message.current = err.message;
       }
       setOpen(true);
-    } 
+    }
   };
 
   const addIcons = [
@@ -108,7 +113,7 @@ const Listings = () => {
     { icon: <HeartBrokenIcon />, name: "Remove from Favorites" },
     { icon: <EditCalendarIcon />, name: "Check availability" },
   ];
-  
+
   useEffect(() => {
     const fetchListings = async () => {
       const url = `https://airbnb13.p.rapidapi.com/search-location?location=${city}&checkin=2023-09-16&checkout=2023-09-17&adults=1&children=0&infants=0&pets=0&page=1&currency=USD`;
@@ -131,15 +136,53 @@ const Listings = () => {
     };
     fetchListings();
   }, [city, dispatch]);
-  console.log(listings);
+  console.log(listings.results);
+  
+  const priceFilterUp = () => {
+    let sorted = [...listings.results].sort((a,b)=>a.price.rate-b.price.rate)
+    dispatch(setListings((prevListings)=>({...prevListings, results:sorted})))
+    console.log(listings)
+  };
+
+  const priceFilterDown = () => {
+    let sortDown = [...listings.results].sort((a,b)=>b.price.rate-a.price.rate)
+    console.log(sortDown)
+  };
+
+  const ratingFilterUp = () => {
+
+  };
+
+  const ratingFilterDown = () => {
+
+  };
+
+
   return (
     <>
       {listings.results?.length > 0 ? (
         <>
-          <Typography variant="h3" align="center" sx={{m:5}}>
+          <Typography variant="h3" align="center" sx={{ m: 5 }}>
             {city.split("%20").join(" ").split("%2C").join(",")}, found{" "}
             {listings.results?.length} properties
           </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              "& > *": {
+                m: 1,
+              },
+            }}
+          >
+            <ButtonGroup variant="text" aria-label="text button group" color="inherit">
+              <Button onClick={()=>priceFilterUp()}>Price/night ↑</Button>
+              <Button onClick={()=>priceFilterDown()}>Price/night ↓</Button>
+              <Button onClick={()=>ratingFilterUp()}>Rating ↑</Button>
+              <Button onClick={()=>ratingFilterDown()}>Rating ↓</Button>
+            </ButtonGroup>
+          </Box>
           <Box
             sx={{
               p: 2,
@@ -171,27 +214,33 @@ const Listings = () => {
                         sx={{ position: "absolute", bottom: 16, right: 16 }}
                         icon={<SpeedDialIcon />}
                       >
-                        {favorites.flat().find(
-                          (fav) => fav.favorites === listing.id
-                        ) ? (
-                          removeIcons.map((action) => (
-                            <SpeedDialAction
-                              key={action.name}
-                              icon={action.icon}
-                              tooltipTitle={action.name}
-                              onClick={action.name==="Remove from Favorites" ? (()=>removeFav(i)):(() => navigate(`/location/${listing.id}`))}
-                            />
-                          ))
-                        ) : (
-                          addIcons.map((action) => (
-                            <SpeedDialAction
-                              key={action.name}
-                              icon={action.icon}
-                              tooltipTitle={action.name}
-                              onClick={action.name==="Add to Favorites" ? (()=>addToFav(i)):(() => navigate(`/location/${listing.id}`))}
-                            />
-                          ))
-                        )}
+                        {favorites
+                          .flat()
+                          .find((fav) => fav.favorites === listing.id)
+                          ? removeIcons.map((action) => (
+                              <SpeedDialAction
+                                key={action.name}
+                                icon={action.icon}
+                                tooltipTitle={action.name}
+                                onClick={
+                                  action.name === "Remove from Favorites"
+                                    ? () => removeFav(i)
+                                    : () => navigate(`/location/${listing.id}`)
+                                }
+                              />
+                            ))
+                          : addIcons.map((action) => (
+                              <SpeedDialAction
+                                key={action.name}
+                                icon={action.icon}
+                                tooltipTitle={action.name}
+                                onClick={
+                                  action.name === "Add to Favorites"
+                                    ? () => addToFav(i)
+                                    : () => navigate(`/location/${listing.id}`)
+                                }
+                              />
+                            ))}
 
                         {open && (
                           <Snackbar
@@ -276,10 +325,12 @@ const Listings = () => {
           </Box>
         </>
       ) : (
-        <Typography>No results found</Typography>
+        <Typography variant="h4" align="center" sx={{ m: 3 }}>
+          No results found
+        </Typography>
       )}
       <footer className="footer">
-        <Footer/>
+        <Footer />
       </footer>
     </>
   );
