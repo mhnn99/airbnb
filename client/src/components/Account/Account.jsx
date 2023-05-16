@@ -11,6 +11,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import { setListings } from "../../state";
 import Listings from "../Listings/Listings";
+import Footer from "../Footer/Footer";
 
 const Account = () => {
   const dispatch = useDispatch();
@@ -142,6 +143,9 @@ const Account = () => {
           ))}
         </Box>
       )}
+      <footer>
+        <Footer />
+      </footer>
 </>
   )}
 

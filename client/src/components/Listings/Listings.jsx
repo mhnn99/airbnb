@@ -19,6 +19,9 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import jwt_decode from "jwt-decode";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import Footer from "../Footer/Footer";
+
+
 const Listings = () => {
   const dispatch = useDispatch();
   const { city } = useParams();
@@ -275,6 +278,9 @@ const Listings = () => {
       ) : (
         <Typography>No results found</Typography>
       )}
+      <footer className="footer">
+        <Footer/>
+      </footer>
     </>
   );
 };

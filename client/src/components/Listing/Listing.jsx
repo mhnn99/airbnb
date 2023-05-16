@@ -59,6 +59,7 @@ import BathroomIcon from "@mui/icons-material/Bathroom";
 import RouteIcon from "@mui/icons-material/Route";
 import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
+import Footer from "../Footer/Footer";
 
 const Listing = () => {
   const amenities = [
@@ -426,6 +427,9 @@ const Listing = () => {
           </Grid>
         </Box>
       </Box>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };

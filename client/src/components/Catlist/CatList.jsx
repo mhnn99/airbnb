@@ -133,7 +133,9 @@ const navigate = useNavigate()
         </ImageButton>
       ))}
     </Box>
-    <Footer/>
+    <footer className="footer">
+      <Footer/>
+    </footer>
     </>
   );
 };
