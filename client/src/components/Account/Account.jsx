@@ -81,16 +81,16 @@ const Account = () => {
   }, [groupedFavs]);
   console.log(listings)
 
-  const removeFav = async (listing) => {
+  const removeFav = async (index,id) => {
     const token = userToken ? userToken : null;
     if (token) {
-      dispatch(setRemoveFavs({ id: listings.results[listing].id }));
+      dispatch(setRemoveFavs({ id: id }));
       try {
         const fetchFav = await fetch(
           `http://localhost:9000/favorites/${jwt_decode(token).userId}`,
           {
             method: "PATCH",
-            body: JSON.stringify({ id: listings.results[listing].id }),
+            body: JSON.stringify({ id: listings.results[index].id }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",
               Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ const Account = () => {
               <Grid container spacing={4}>
                 {value.map((location, i) => (
                   <Grid item xs={12} md={4} key={i} >
-                    <Card sx={{ maxWidth: 'lg', minHeight:'15rem' }} onClick={() => navigate(`/location/${location.id}`)}>
+                    <Card sx={{ maxWidth: 'lg', minHeight:'15rem' }} >
                       <CardActionArea>
                         <Fab style={{
                           color:"#610000",
@@ -155,7 +155,7 @@ const Account = () => {
                           right: 10,
                           zIndex: 2,
                         }}
-                        onClick={() => removeFav(i)}>
+                        onClick={() => removeFav(i,location.id)}>
                           <HeartBrokenIcon/>
                         </Fab>
                         <CardMedia
@@ -164,7 +164,7 @@ const Account = () => {
                           image={location.images[0]}
                           alt="green iguana"
                           />
-                        <CardContent>
+                        <CardContent onClick={() => navigate(`/location/${location.id}`)}>
                           <Typography gutterBottom variant="h5" component="div">
                             {location.name}
                           </Typography>
