@@ -14,7 +14,6 @@ import Grid from "@mui/material/Grid";
 
 const CatList = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const cities = useSelector((state) => ({
     cities: state.cities,
     initialArr: state.initialArr,
@@ -84,28 +83,7 @@ const CatList = () => {
     transition: theme.transitions.create("opacity"),
   }));
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await Promise.all(
-          cities.initialArr.map((url) =>
-            fetch(`https://api.pexels.com/v1/search?query=${url}`, {
-              method: "GET",
-              headers: {
-                Accept: "application/json",
-                Authorization:
-                  "aA1vysRzOWAkW94xcM7VMp4wSdm2kKGZEr0vRfpmZZM924kjhIK4G2i5",
-              },
-            }).then((res) => res.json())
-          )
-        );
-        dispatch(setCities({ cities: response }));
-      } catch (error) {
-        console.log("Error", error);
-      }
-    };
-    fetchCities();
-  }, [dispatch]);
+  
   const theme = useTheme();
 
   const transitions = useTransition(cities.cities, {

@@ -9,38 +9,45 @@ import { Box, Typography, Button } from "@mui/material";
 import { useSpring, animated } from "@react-spring/web";
 import { useTheme } from "@mui/material";
 import Footer from "../../components/Footer/Footer";
+import { useInView } from "@react-spring/web";
+import { useDispatch } from "react-redux";
+import { setCities } from "../../state";
 
 const AnimatedTypography = animated(Typography);
 
 const WelcomePage = () => {
   const parallax = useRef(null);
-  const targetRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const callbackFunction = (entries) => {
-    const [entry] = entries;
-    setIsVisible(entry.isIntersecting);
-  };
-
-  const options = useMemo(() => {
-    return {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.3,
-    };
-  }, []);
-
+  const dispatch = useDispatch()
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0
+  })
+  const cities = useSelector((state) => ({
+    cities: state.cities,
+    initialArr: state.initialArr,
+  }));
   useEffect(() => {
-    const observer = new IntersectionObserver(callbackFunction, options);
-    const currentTarget = targetRef.current;
-    console.log(currentTarget)
-    if (currentTarget) observer.observe(currentTarget);
-    return () =>{
-      if(currentTarget) observer.unobserve(currentTarget)
-    }
-  
-  }, [targetRef, options]);
-
+    const fetchCities = async () => {
+      try {
+        const response = await Promise.all(
+          cities.initialArr.map((url) =>
+            fetch(`https://api.pexels.com/v1/search?query=${url}`, {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                Authorization:
+                  "aA1vysRzOWAkW94xcM7VMp4wSdm2kKGZEr0vRfpmZZM924kjhIK4G2i5",
+              },
+            }).then((res) => res.json())
+          )
+        );
+        dispatch(setCities({ cities: response }));
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+    fetchCities();
+  }, []);
   const scroll = (to) => {
     if (parallax.current) {
       parallax.current.scrollTo(to);
@@ -88,18 +95,18 @@ const WelcomePage = () => {
         </ParallaxLayer>
 
         <ParallaxLayer offset={1} speed={0.5} >
-          <div className="parallax-section" ref={targetRef}>
+          <div className="parallax-section" ref={ref}>
             <Box sx={{ textAlign: "center", marginTop: "6rem", height: "100%" }}>
               <AnimatedTypography variant="h4" sx={{ color: "inherit", textAlign: "center", marginBottom: 5, textShadow: "1px 1px 20px #fbf5df" }} style={springProps} >
                 Explore our curated travel destinations
               </AnimatedTypography>
-              {isVisible && <CatList />}
+              {inView && <CatList />}
             </Box>
           </div>
         </ParallaxLayer>
 
         <ParallaxLayer offset={2} speed={0.5}>
-          <h1>3rd layer</h1>
+          <h1>3rd laye</h1>
           <Footer />
         </ParallaxLayer>
       </Parallax>
