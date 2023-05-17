@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
+
 const userSchema = new Schema({
   firstName: {
     type: String,
@@ -20,12 +21,17 @@ const userSchema = new Schema({
     max: 50,
     unique: true,
   },
-  password: { type: String, required: true, max: 50 },
-  picturePath:{
-    type:String,
-    default:''
+  password: {
+    type: String,
+    required: true,
+    max: 50,
   },
-},{timestamps:true});
+  picturePath: {
+    type: String,
+    default: ''
+  },
+  favorites: [{type:mongoose.Schema.Types.Mixed, ref:'Listing'}]
+}, { timestamps: true });
 
 const userModel = model("userModel", userSchema);
 

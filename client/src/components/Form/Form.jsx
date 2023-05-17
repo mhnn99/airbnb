@@ -7,7 +7,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import {useNavigate} from 'react-router-dom'
 import {useDispatch} from 'react-redux'
-import { setLogin } from "../../state";
+import { setLogin, setFavorites } from "../../state";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Typography } from "@material-ui/core";
@@ -100,7 +100,7 @@ const Form = () => {
     onSubmitProps.resetForm()
   }
   const login = async(values,onSubmitProps) =>{
-    console.log(values)
+    
     const savedUserResponse = await fetch('http://localhost:9000/auth/login',{
       method:'POST',
       body:JSON.stringify(values),
@@ -109,6 +109,7 @@ const Form = () => {
     const res = await savedUserResponse.json()
     console.log(res)
     if(res.token){
+      dispatch(setFavorites(res.foundUser.favorites))
       dispatch(setLogin({
         user:res.foundUser,
         token:res.token

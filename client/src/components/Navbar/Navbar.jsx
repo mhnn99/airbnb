@@ -9,7 +9,7 @@ import { Navigate, Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setLogout } from "../../state";
+import { setResetFavorites, setLogout } from "../../state";
 import Switch from "@mui/material/Switch";
 import { setMode } from "../../state";
 import Menu from "@mui/material/Menu";
@@ -114,7 +114,10 @@ const Navbar = () => {
                     <Link
                     component={MyHome}
                     onClick={() =>
-                      dispatch(setLogout({ user: null, token: null }))
+                      {
+                        dispatch(setLogout({ user: null, token: null }))
+                        dispatch(setResetFavorites())
+                      }
                     }
                     color="inherit"
                     underline="none"

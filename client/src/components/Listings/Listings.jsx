@@ -17,8 +17,8 @@ import HeartBrokenIcon from "@mui/icons-material/HeartBroken";
 import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import jwt_decode from "jwt-decode";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-
 const Listings = () => {
   const dispatch = useDispatch();
   const { city } = useParams();
@@ -27,25 +27,46 @@ const Listings = () => {
   const favorites = useSelector((state) => state.favorites);
   const message = useRef("");
   const [open, setOpen] = useState(false);
+  const userToken = useSelector(state=>state.token)
+  console.log(favorites.flat())
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-  const addToFav = (listing) => {
-    if (
-      !favorites.find(
-        (fav) => fav.favorites.id === listings.results[listing].id
-      )
-    ) {
-      dispatch(
-        setFavorites({ city: city, favorites: listings.results[listing] })
-      );
-      message.current = "Listing added to favorites!";
-    } 
+  
+
+  const addToFav = async (listing) => {
+    const token = userToken? userToken : null
+    if(token){
+      const decodedToken = jwt_decode(token)
+      if (
+        !favorites.find(
+          (fav) => fav.favorites === listings.results[listing].id
+          )
+          ) {
+        dispatch(
+          setFavorites({ city: city, favorites: listings.results[listing].id })
+        );
+        try{
+          const postFav = await fetch(`http://localhost:9000/favorites/${decodedToken.userId}`,{
+            method:'POST',
+            body:JSON.stringify({ city: city, favorites: listings.results[listing].id }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          const res = await postFav.json()
+          console.log(res)
+          message.current = "Listing added to favorites!";
+        }catch(err){
+          message.current = err.message
+        }
+      } 
+    }
     setOpen(true);
   };
-  console.log(favorites);
 
   const removeFav = (listing) => {
 dispatch(setRemoveFavs({id:listings.results[listing].id}))
@@ -125,8 +146,8 @@ message.current = 'Removed from favorites'
                         sx={{ position: "absolute", bottom: 16, right: 16 }}
                         icon={<SpeedDialIcon />}
                       >
-                        {favorites.find(
-                          (fav) => fav.favorites.id === listing.id
+                        {favorites.flat().find(
+                          (fav) => fav.favorites === listing.id
                         ) ? (
                           removeIcons.map((action) => (
                             <SpeedDialAction

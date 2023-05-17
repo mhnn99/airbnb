@@ -13,7 +13,7 @@ const {reviewPost, getReviews} = reviewFunc
 const {register, login, changePassword} = authFunc;
 const orderFunc = require('./controllers/orders')
 const {postOrder, getOrders, getOrdersByUser, deleteOrders} = orderFunc
-const getUser = require('./controllers/users')
+const {getUser,addToFav} = require('./controllers/users')
 
 
 if (!MONGO_URL) {
@@ -38,5 +38,6 @@ app.get('/user/orders/:id', getOrdersByUser)
 app.post('/reviews',reviewPost)
 app.get('/reviews/:id', getReviews)
 app.get('/users/:id',getUser)
+app.post('/favorites/:id',addToFav)
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`))
 

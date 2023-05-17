@@ -12,7 +12,8 @@ const register = async (req, res) => {
         lastName,
         email,
         password: passwordHash,
-        picturePath
+        picturePath,
+        favorites:{}
     })
     const savedUser = await newUser.save()
     
