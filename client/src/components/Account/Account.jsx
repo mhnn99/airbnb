@@ -42,7 +42,6 @@ const Account = () => {
 
   const [favCities, setFavCities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -72,7 +71,6 @@ const Account = () => {
         }, {})}));
         setIsLoading(false);
       } catch (err) {
-        setError(err.message);
         setIsLoading(false);
       }
     };
@@ -128,8 +126,6 @@ const Account = () => {
         <CircularProgress color="inherit"/>
         <Typography align="center" variant="h4">Loading...</Typography>
       </Stack>
-      ) : error ? (
-        <div>Error: {error}</div>
       ) : (
         <Box sx={{m:5}}>
            <Typography variant="h4" align="left">
