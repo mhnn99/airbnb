@@ -7,7 +7,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import {useNavigate} from 'react-router-dom'
 import {useDispatch} from 'react-redux'
-import { setLogin, setFavorites } from "../../state";
+import { setLogin, setInitialFavorites } from "../../state";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Typography } from "@material-ui/core";
@@ -109,7 +109,9 @@ const Form = () => {
     const res = await savedUserResponse.json()
     console.log(res)
     if(res.token){
-      dispatch(setFavorites(res.foundUser.favorites))
+      if(res.foundUser.favorites.length>0){
+        dispatch(setInitialFavorites(res.foundUser.favorites))
+      }
       dispatch(setLogin({
         user:res.foundUser,
         token:res.token

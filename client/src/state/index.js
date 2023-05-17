@@ -46,6 +46,9 @@ export const authSlice = createSlice({
         setFavorites:(state,action)=>{
             state.favorites = [...state.favorites,action.payload]
         },
+        setInitialFavorites:(state,action)=>{
+            state.favorites = action.payload
+        },
         setResetFavorites:(state)=>{
             state.favorites=[]
         },
@@ -55,5 +58,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setFavorites, setRemoveFavs,setResetFavorites} = authSlice.actions
+export const {setMode, setLogin, setLogout, setCities, setSearch, setCity, setSearchResults, setListings, setFavorites, setRemoveFavs,setResetFavorites, setInitialFavorites} = authSlice.actions
 export default authSlice.reducer
