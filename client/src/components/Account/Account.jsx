@@ -104,10 +104,10 @@ const Account = () => {
               <Typography variant="h4" align="center" sx={{ p: 5 }}>
                 {city}
               </Typography>
-              <Grid container spacing={4} sx={{display:"flex", justifyContent:"center"}}>
+              <Grid container spacing={4}>
                 {value.map((location, i) => (
-                  <Grid item xs={12} md={4} sx={{ display: "flex", justifyContent: "center" }} key={i} >
-                    <Card sx={{ maxWidth: 345 }} onClick={() => navigate(`/location/${location.id}`)}>
+                  <Grid item xs={12} md={4} key={i} >
+                    <Card sx={{ maxWidth: 'lg', minHeight:'15rem' }} onClick={() => navigate(`/location/${location.id}`)}>
                       <CardActionArea>
                         <HeartBrokenIcon style={{
                           color:"black",
@@ -121,7 +121,7 @@ const Account = () => {
                         }}/>
                         <CardMedia
                           component="img"
-                          height="140"
+                          height="250"
                           image={location.images[0]}
                           alt="green iguana"
                           />
