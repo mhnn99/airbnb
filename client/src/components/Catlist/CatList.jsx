@@ -136,7 +136,6 @@ const CatList = () => {
           </Grid>
         ))}
       </Grid>
-      <Footer/>
     </>
   );
 };

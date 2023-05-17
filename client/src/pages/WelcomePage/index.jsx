@@ -81,7 +81,7 @@ const WelcomePage = () => {
       )}
 
       <Parallax ref={parallax} pages={2}>
-        <ParallaxLayer offset={0} speed={0.5} style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", backgroundImage: "url(https://www.pixelstalk.net/wp-content/uploads/images6/Beach-Wallpaper-HD-Free-download.jpg)", backgroundSize: "cover" }}>
+        <ParallaxLayer offset={0} speed={0.5} style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", backgroundImage: "url(https://imgur.com/GJvEISJ.jpg)", backgroundSize: "cover" }}>
           <div className="parallax-section">
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh" }}>
               <AnimatedTypography variant="h1" sx={{ color: "white", textAlign: "center", textShadow: "1px 1px 10px #061a40, 1px 1px 10px #b16100" }} style={springProps}>
@@ -94,21 +94,19 @@ const WelcomePage = () => {
           </div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={1} speed={0.5} >
+        <ParallaxLayer offset={0.95} speed={0.5} >
           <div className="parallax-section" ref={ref}>
             <Box sx={{ textAlign: "center", marginTop: "6rem", height: "100%" }}>
               <AnimatedTypography variant="h4" sx={{ color: "inherit", textAlign: "center", marginBottom: 5, textShadow: "1px 1px 20px #fbf5df" }} style={springProps} >
                 Explore our curated travel destinations
               </AnimatedTypography>
               {inView && <CatList />}
+              <Footer/>
             </Box>
           </div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={2} speed={0.5}>
-          <h1>3rd laye</h1>
-          <Footer />
-        </ParallaxLayer>
+
       </Parallax>
     </>
   );
