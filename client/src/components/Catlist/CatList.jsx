@@ -7,6 +7,7 @@ import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import Footer from "../Footer/Footer";
 
 const CatList = () => {
 const dispatch = useDispatch()
@@ -132,6 +133,9 @@ const navigate = useNavigate()
         </ImageButton>
       ))}
     </Box>
+    <footer className="footer">
+      <Footer/>
+    </footer>
     </>
   );
 };

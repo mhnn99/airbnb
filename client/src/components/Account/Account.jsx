@@ -10,7 +10,10 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import { setListings } from "../../state";
-import Listings from "../Listings/Listings";
+import Footer from "../Footer/Footer";
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 const Account = () => {
   const dispatch = useDispatch();
@@ -91,7 +94,10 @@ const Account = () => {
         </Grid>
       </Box>
       {isLoading ? (
-        <div>Loading...</div>
+      <Stack sx={{ width: '100%', color: 'grey.500'}} spacing={2} alignItems="center">
+        <CircularProgress color="inherit"/>
+        <Typography align="center" variant="h4">Loading...</Typography>
+      </Stack>
       ) : error ? (
         <div>Error: {error}</div>
       ) : (
@@ -142,6 +148,9 @@ const Account = () => {
           ))}
         </Box>
       )}
+      <footer>
+        <Footer />
+      </footer>
 </>
   )}
 

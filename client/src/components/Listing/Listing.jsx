@@ -59,6 +59,7 @@ import BathroomIcon from "@mui/icons-material/Bathroom";
 import RouteIcon from "@mui/icons-material/Route";
 import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
+import Footer from "../Footer/Footer";
 
 const Listing = () => {
   const amenities = [
@@ -271,11 +272,11 @@ const Listing = () => {
               ))}
           </Swiper>
         </Container>
-        <Typography sx={{ fontSize: "28px", marginTop: 2 }}>
+        <Typography sx={{ fontSize: "28px", marginTop: 2, marginLeft:3 }}>
           {listing[0]?.type}
         </Typography>
         <Typography
-          sx={{ fontSize: "20px", color: theme.palette.secondary.dark }}
+          sx={{ fontSize: "20px", color: theme.palette.secondary.dark , marginLeft:3}}
         >
           Rooms
         </Typography>
@@ -298,7 +299,7 @@ const Listing = () => {
             </Grid>
           </Grid>
         </Box>
-        <Grid container spacing={3} sx={{ marginTop: 3 }}>
+        <Grid container spacing={3} sx={{ marginTop: 3}}>
           <Grid item xs={12} md={6}>
             <Typography
               sx={{
@@ -370,7 +371,7 @@ const Listing = () => {
             </Card>
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 2 }}>
+        <Box sx={{ marginTop: 2, marginLeft: 3 }}>
           <Typography
             sx={{
               fontSize: "20px",
@@ -426,6 +427,9 @@ const Listing = () => {
           </Grid>
         </Box>
       </Box>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };
