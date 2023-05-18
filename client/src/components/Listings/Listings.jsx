@@ -136,31 +136,38 @@ const Listings = () => {
     };
     fetchListings();
   }, [city, dispatch]);
-  console.log(listings.results);
   
   const priceFilterUp = () => {
-    let sorted = [...listings.results].sort((a,b)=>a.price.rate-b.price.rate)
-    dispatch(setListings((prevListings)=>({...prevListings, results:sorted})))
-    console.log(listings)
-  };
+    const sorted = [...listings.results].sort((a, b) => a.price.rate - b.price.rate);
+    const updatedListings = { ...listings, results: sorted };
+    dispatch(setListings({listings:updatedListings}));
+};
+useEffect(() => {
+  console.log(listings);
+}, [listings]);
 
   const priceFilterDown = () => {
     let sortDown = [...listings.results].sort((a,b)=>b.price.rate-a.price.rate)
-    console.log(sortDown)
+    const updatedListings = { ...listings, results: sortDown };
+    dispatch(setListings({listings:updatedListings}));
   };
 
   const ratingFilterUp = () => {
-
+    let sortDown = [...listings.results].sort((a,b)=>a.rating-b.rating)
+    const updatedListings = { ...listings, results: sortDown };
+    dispatch(setListings({listings:updatedListings}));
   };
 
   const ratingFilterDown = () => {
-
+    let sortDown = [...listings.results].sort((a,b)=>b.rating-a.rating)
+    const updatedListings = { ...listings, results: sortDown };
+    dispatch(setListings({listings:updatedListings}));
   };
 
 
   return (
     <>
-      {listings.results?.length > 0 ? (
+      {listings?.results?.length > 0 ? (
         <>
           <Typography variant="h3" align="center" sx={{ m: 5 }}>
             {city.split("%20").join(" ").split("%2C").join(",")}, found{" "}

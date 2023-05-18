@@ -9,7 +9,7 @@ const initialState = {
     search:'',
     city:'',
     searchResults:[],
-    listings:[],
+    listings:{},
     favorites:[]
 }
 
