@@ -22,6 +22,7 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import Footer from "../Footer/Footer";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from '@mui/material/Button';
+import BackToTop from "../BackToTop/BackToTop";
 
 
 const Listings = () => {
@@ -328,6 +329,7 @@ useEffect(() => {
                 </Grid>
               ))}
             </Grid>
+            <BackToTop/>
           </Box>
         </>
       ) : (

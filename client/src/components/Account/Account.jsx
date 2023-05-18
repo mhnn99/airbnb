@@ -15,6 +15,7 @@ import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import Fab from '@mui/material/Fab';
 import jwt_decode from "jwt-decode";
+import BackToTop from "../BackToTop/BackToTop";
 
 
 const Account = () => {
@@ -176,9 +177,8 @@ const Account = () => {
           ))}
         </Box>
       )}
-      <footer>
-        <Footer />
-      </footer>
+      <BackToTop/>
+      <Footer />
 </>
   )}
 

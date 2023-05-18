@@ -12,16 +12,18 @@ import Footer from "../../components/Footer/Footer";
 import { useInView } from "@react-spring/web";
 import { useDispatch } from "react-redux";
 import { setCities } from "../../state";
+import { Fab } from '@mui/material';
+import UpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const AnimatedTypography = animated(Typography);
 
 const WelcomePage = () => {
   const parallax = useRef(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0
-  })
+    threshold: 0,
+  });
   const cities = useSelector((state) => ({
     cities: state.cities,
     initialArr: state.initialArr,
@@ -73,7 +75,11 @@ const WelcomePage = () => {
     <>
       <Navbar />
       {isLoggedIn && (
-        <Snackbar open={open} autoHideDuration={6000} onClose={() => setOpen(false)}>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={() => setOpen(false)}
+        >
           <Alert severity="success" sx={{ width: "100%" }}>
             Successfully logged in!
           </Alert>
@@ -81,32 +87,85 @@ const WelcomePage = () => {
       )}
 
       <Parallax ref={parallax} pages={1.9}>
-        <ParallaxLayer offset={0} speed={0.5} style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", backgroundImage: "url(https://imgur.com/GJvEISJ.jpg)", backgroundSize: "cover" }}>
+        <ParallaxLayer
+          offset={0}
+          speed={0.5}
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundImage: "url(https://imgur.com/GJvEISJ.jpg)",
+            backgroundSize: "cover",
+          }}
+        >
           <div className="parallax-section">
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-              <AnimatedTypography variant="h1" sx={{ color: "white", textAlign: "center", textShadow: "1px 1px 10px #061a40, 1px 1px 10px #b16100" }} style={springProps}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <AnimatedTypography
+                variant="h1"
+                sx={{
+                  color: "white",
+                  textAlign: "center",
+                  textShadow: "1px 1px 10px #061a40, 1px 1px 10px #b16100",
+                }}
+                style={springProps}
+              >
                 Discover Amazing Places
               </AnimatedTypography>
-              <Button variant="outlined" color="inherit" sx={{ mt: 3, fontSize: "22px" }} onClick={() => scroll(0.48)}>
+              <Button
+                variant="outlined"
+                color="inherit"
+                sx={{ mt: 3, fontSize: "22px" }}
+                onClick={() => scroll(0.48)}
+              >
                 Get Started
               </Button>
             </Box>
           </div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={0.95} speed={0.9} >
+        <ParallaxLayer offset={0.95} speed={0.9}>
           <div className="parallax-section" ref={ref}>
-            <Box sx={{ textAlign: "center", marginTop: "6rem", height: "100%" }}>
-              <AnimatedTypography variant="h4" sx={{ color: "inherit", textAlign: "center", marginBottom: 5, textShadow: "1px 1px 20px #fbf5df" }} style={springProps} >
+            <Box
+              sx={{ textAlign: "center", marginTop: "6rem", height: "100%" }}
+            >
+              <AnimatedTypography
+                variant="h4"
+                sx={{
+                  color: "inherit",
+                  textAlign: "center",
+                  marginBottom: 5,
+                  textShadow: "1px 1px 20px #fbf5df",
+                }}
+                style={springProps}
+              >
                 Explore our curated travel destinations
               </AnimatedTypography>
               {inView && <CatList />}
-              <Footer/>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "end",
+                  marginTop: 3,
+                  marginRight: 5,
+                }}
+              >
+                <Fab
+                
+                  onClick={() => scroll(0)}
+                >
+                  <UpIcon />
+                </Fab>
+              </Box>
+              <Footer />
             </Box>
           </div>
         </ParallaxLayer>
-
-
       </Parallax>
     </>
   );
