@@ -22,9 +22,11 @@ import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import Footer from "../Footer/Footer";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const Listings = () => {
+  const [ isLoading, setIsLoading ] = useState(true);
   const dispatch = useDispatch();
   const { city } = useParams();
   const navigate = useNavigate();
@@ -126,11 +128,14 @@ const Listings = () => {
       };
 
       try {
+        setIsLoading(true);
         const response = await fetch(url, options);
         const result = await response.json();
         dispatch(setListings({ listings: result }));
       } catch (error) {
         console.error(error);
+      } finally { 
+        setIsLoading(false);
       }
     };
     fetchListings();
@@ -166,7 +171,12 @@ useEffect(() => {
 
   return (
     <>
-      {listings?.results?.length > 0 ? (
+      {isLoading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: 'center', height: '100vh' }}>
+          <CircularProgress color="inherit"/>
+        </Box>
+      ) : (
+      listings?.results?.length > 0 ? (
         <>
           <Typography variant="h3" align="center" sx={{ m: 5 }}>
             {city.split("%20").join(" ").split("%2C").join(",")}, found{" "}
@@ -334,7 +344,7 @@ useEffect(() => {
         <Typography variant="h4" align="center" sx={{ m: 3 }}>
           No results found
         </Typography>
-      )}
+      ))}
       <footer className="footer">
         <Footer />
       </footer>
