@@ -71,6 +71,8 @@ const Account = () => {
         }, {})}));
         setIsLoading(false);
       } catch (err) {
+        console.log(err);
+      } finally {
         setIsLoading(false);
       }
     };
