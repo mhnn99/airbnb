@@ -40,9 +40,7 @@ const Account = () => {
     }, {});
   }, [favorites]);
 
-  const [favCities, setFavCities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -72,7 +70,6 @@ const Account = () => {
         }, {})}));
         setIsLoading(false);
       } catch (err) {
-        setError(err.message);
         setIsLoading(false);
       }
     };
@@ -128,8 +125,6 @@ const Account = () => {
         <CircularProgress color="inherit"/>
         <Typography align="center" variant="h4">Loading...</Typography>
       </Stack>
-      ) : error ? (
-        <div>Error: {error}</div>
       ) : (
         <Box sx={{m:5}}>
            <Typography variant="h4" align="left">
@@ -141,7 +136,7 @@ const Account = () => {
                 {city}
               </Typography>
               <Grid container spacing={4}>
-                {value.map((location, i) => (
+                {value.length>0&&value.map((location, i) => (
                   <Grid item xs={12} md={4} key={i} >
                     <Card sx={{ maxWidth: 'lg', minHeight:'15rem' }} onClick={() => navigate(`/location/${location.id}`)}>
                       <CardActionArea>
