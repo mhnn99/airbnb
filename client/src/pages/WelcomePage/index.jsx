@@ -36,7 +36,7 @@ const WelcomePage = () => {
               headers: {
                 Accept: "application/json",
                 Authorization:
-                  "aA1vysRzOWAkW94xcM7VMp4wSdm2kKGZEr0vRfpmZZM924kjhIK4G2i5",
+                  "jePcpAc1q9cQdNqYEULs0QajmL86j6uFCeElsKKD44NnxI0WDFgUWfIr",
               },
             }).then((res) => res.json())
           )
@@ -80,21 +80,21 @@ const WelcomePage = () => {
         </Snackbar>
       )}
 
-      <Parallax ref={parallax} pages={2}>
+      <Parallax ref={parallax} pages={1.9}>
         <ParallaxLayer offset={0} speed={0.5} style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", backgroundImage: "url(https://imgur.com/GJvEISJ.jpg)", backgroundSize: "cover" }}>
           <div className="parallax-section">
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh" }}>
               <AnimatedTypography variant="h1" sx={{ color: "white", textAlign: "center", textShadow: "1px 1px 10px #061a40, 1px 1px 10px #b16100" }} style={springProps}>
                 Discover Amazing Places
               </AnimatedTypography>
-              <Button variant="outlined" color="inherit" sx={{ mt: 3, fontSize: "22px" }} onClick={() => scroll(0.62)}>
+              <Button variant="outlined" color="inherit" sx={{ mt: 3, fontSize: "22px" }} onClick={() => scroll(0.48)}>
                 Get Started
               </Button>
             </Box>
           </div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={0.95} speed={0.5} >
+        <ParallaxLayer offset={0.95} speed={0.9} >
           <div className="parallax-section" ref={ref}>
             <Box sx={{ textAlign: "center", marginTop: "6rem", height: "100%" }}>
               <AnimatedTypography variant="h4" sx={{ color: "inherit", textAlign: "center", marginBottom: 5, textShadow: "1px 1px 20px #fbf5df" }} style={springProps} >
