@@ -94,7 +94,7 @@ const WelcomePage = () => {
           </div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={1} speed={0.5} >
+        <ParallaxLayer offset={0.95} speed={0.5} >
           <div className="parallax-section" ref={ref}>
             <Box sx={{ textAlign: "center", marginTop: "6rem", height: "100%" }}>
               <AnimatedTypography variant="h4" sx={{ color: "inherit", textAlign: "center", marginBottom: 5, textShadow: "1px 1px 20px #fbf5df" }} style={springProps} >
