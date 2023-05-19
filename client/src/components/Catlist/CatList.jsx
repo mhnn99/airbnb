@@ -106,59 +106,66 @@ const CatList = () => {
     fetchCities();
   }, [dispatch]);
   const theme = useTheme();
-const [ref, inView] = useInView({
-triggerOnce: true,
-});
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+  });
 
-const transitions = useTransition(cities.cities, {
-from: { opacity: 0, transform: "scale(0.8)" },
-enter: { opacity: 1, transform: "scale(1)" },
-config: { mass: 1, tension: 280, friction: 30 },
-trail: 200,
-})
+  const transitions = useTransition(cities.cities, {
+    from: { opacity: 0, transform: "scale(0.8)" },
+    enter: { opacity: 1, transform: "scale(1)" },
+    config: { mass: 1, tension: 280, friction: 30 },
+    trail: 200,
+    immediate: !inView,
+  });
 
-return (
-<>
-<Grid container spacing={4}>
-{transitions((styles, item, t, index) => (
-<Grid item xs={12} sm={6} md={4} key={cities.initialArr[index]}>
-<animated.div style={styles}>
-<ImageButton
-focusRipple
-style={{
-width: "100%",
-margin: 30,
-}}
-onClick={() => navigate(`/locations/${cities.initialArr[index]}`)}
->
-<ImageSrc style={{ backgroundImage: `url(${item.photos[0].src.large})` }} />
-<ImageBackdrop className="MuiImageBackdrop-root" />
-<Image>
-<Typography
-component="span"
-variant="subtitle1"
-color="inherit"
-sx={{
-position: "relative",
-p: 4,
-pt: 2,
-pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-}}
->
-{cities.initialArr[index]}
-<ImageMarked className="MuiImageMarked-root" />
-</Typography>
-</Image>
-</ImageButton>
-</animated.div>
-</Grid>
-))}
-</Grid>
-<footer className="footer">
-<Footer />
-</footer>
-</>
-);
+  return (
+    <>
+      <Grid container spacing={4}>
+        {transitions((styles, item, t, index) => (
+          <Grid item xs={12} sm={6} md={4} key={cities.initialArr[index]}>
+            <animated.div style={styles} ref={ref}>
+              <ImageButton
+                focusRipple
+                style={{
+                  width: "100%",
+                  margin: 30,
+                }}
+                onClick={() =>
+                  navigate(`/locations/${cities.initialArr[index]}`)
+                }
+              >
+                <ImageSrc
+                  style={{
+                    backgroundImage: `url(${item.photos[0].src.large})`,
+                  }}
+                />
+                <ImageBackdrop className="MuiImageBackdrop-root" />
+                <Image>
+                  <Typography
+                    component="span"
+                    variant="subtitle1"
+                    color="inherit"
+                    sx={{
+                      position: "relative",
+                      p: 4,
+                      pt: 2,
+                      pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                    }}
+                  >
+                    {cities.initialArr[index]}
+                    <ImageMarked className="MuiImageMarked-root" />
+                  </Typography>
+                </Image>
+              </ImageButton>
+            </animated.div>
+          </Grid>
+        ))}
+      </Grid>
+      <footer className="footer">
+        <Footer />
+      </footer>
+    </>
+  );
 };
 
 export default CatList;
