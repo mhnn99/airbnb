@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../Navbar/Navbar";
 import { Card, Typography, Grid } from "@mui/material";
@@ -9,13 +9,18 @@ import { useNavigate } from "react-router-dom";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
-import { setListings } from "../../state";
+import { setListings, setRemoveFavs } from "../../state";
 import Footer from "../Footer/Footer";
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
+import Fab from '@mui/material/Fab';
+import jwt_decode from "jwt-decode";
 
 
 const Account = () => {
+  const [open, setOpen] = useState(false);
+  const userToken = useSelector((state) => state.token);
+  const message = useRef("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => ({
@@ -76,6 +81,31 @@ const Account = () => {
   }, [groupedFavs]);
   console.log(listings)
 
+  const removeFav = async (listing) => {
+    const token = userToken ? userToken : null;
+    if (token) {
+      dispatch(setRemoveFavs({ id: listings.results[listing].id }));
+      try {
+        const fetchFav = await fetch(
+          `http://localhost:9000/favorites/${jwt_decode(token).userId}`,
+          {
+            method: "PATCH",
+            body: JSON.stringify({ id: listings.results[listing].id }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const res = await fetchFav.json();
+        message.current = res.message;
+      } catch (err) {
+        message.current = err.message;
+      }
+      setOpen(true);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -115,8 +145,8 @@ const Account = () => {
                   <Grid item xs={12} md={4} key={i} >
                     <Card sx={{ maxWidth: 'lg', minHeight:'15rem' }} onClick={() => navigate(`/location/${location.id}`)}>
                       <CardActionArea>
-                        <HeartBrokenIcon style={{
-                          color:"black",
+                        <Fab style={{
+                          color:"#610000",
                           height: "3rem",
                           width:"3rem",
                           marginTop: "7px",
@@ -124,7 +154,10 @@ const Account = () => {
                           top: 1,
                           right: 10,
                           zIndex: 2,
-                        }}/>
+                        }}
+                        onClick={() => removeFav(i)}>
+                          <HeartBrokenIcon/>
+                        </Fab>
                         <CardMedia
                           component="img"
                           height="250"
