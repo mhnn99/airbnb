@@ -1,6 +1,6 @@
 import { setCities } from "../../state";
 import { useDispatch } from "react-redux";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -19,6 +19,7 @@ const CatList = () => {
     cities: state.cities,
     initialArr: state.initialArr,
   }));
+
   const ImageButton = styled(ButtonBase)(({ theme }) => ({
     position: "relative",
     height: 200,
@@ -106,29 +107,25 @@ const CatList = () => {
     fetchCities();
   }, [dispatch]);
   const theme = useTheme();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-  });
 
   const transitions = useTransition(cities.cities, {
     from: { opacity: 0, transform: "scale(0.8)" },
     enter: { opacity: 1, transform: "scale(1)" },
     config: { mass: 1, tension: 280, friction: 30 },
     trail: 200,
-    immediate: !inView,
   });
 
   return (
     <>
       <Grid container spacing={4}>
+        
         {transitions((styles, item, t, index) => (
           <Grid item xs={12} sm={6} md={4} key={cities.initialArr[index]}>
-            <animated.div style={styles} ref={ref}>
+            {<animated.div style={styles}>
               <ImageButton
                 focusRipple
                 style={{
                   width: "100%",
-                  margin: 30,
                 }}
                 onClick={() =>
                   navigate(`/locations/${cities.initialArr[index]}`)
@@ -157,13 +154,10 @@ const CatList = () => {
                   </Typography>
                 </Image>
               </ImageButton>
-            </animated.div>
+            </animated.div>}
           </Grid>
         ))}
       </Grid>
-      <footer className="footer">
-        <Footer />
-      </footer>
     </>
   );
 };
