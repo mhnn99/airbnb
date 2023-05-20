@@ -33,7 +33,6 @@ const Listings = () => {
   const message = useRef("");
   const [open, setOpen] = useState(false);
   const userToken = useSelector((state) => state.token);
-  const [sortUp, setSortUp] = useState([]);
   console.log(favorites.flat());
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -249,10 +248,11 @@ useEffect(() => {
                               />
                             ))}
 
+                      </SpeedDial>
                         {open && (
                           <Snackbar
                             open={open}
-                            autoHideDuration={700}
+                            autoHideDuration={2000}
                             onClose={() => setOpen(false)}
                           >
                             <Alert
@@ -268,7 +268,6 @@ useEffect(() => {
                             </Alert>
                           </Snackbar>
                         )}
-                      </SpeedDial>
                       <CardMedia
                         sx={{ height: 200, position: "relative" }}
                         component="img"

@@ -87,7 +87,7 @@ const Account = () => {
           `http://localhost:9000/favorites/${jwt_decode(token).userId}`,
           {
             method: "PATCH",
-            body: JSON.stringify({ id: listings.results[index].id }),
+            body: JSON.stringify({ id: id }),
             headers: {
               "Content-type": "application/json; charset=UTF-8",
               Authorization: `Bearer ${token}`,

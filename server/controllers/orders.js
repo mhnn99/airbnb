@@ -10,7 +10,7 @@ const postOrder = async(req,res) =>{
             checkoutDate
         })
         const savedOrder = await order.save()
-        res.status(201).json({savedOrder})
+        res.status(201).json({message:'Booking successful!',savedOrder})
     }catch(err){
         res.status(500).json({message:err.message})
     }

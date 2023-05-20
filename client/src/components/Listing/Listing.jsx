@@ -3,11 +3,12 @@ import jwt_decode from "jwt-decode";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useState, useRef } from "react";
 import { TextField, Typography } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import CardHeader from "@mui/material/CardHeader";
 import { useEffect } from "react";
 import { Grid, Box } from "@mui/material";
-import Carousel from "react-material-ui-carousel";
 import { useTheme } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, EffectCoverflow, Zoom } from "swiper";
@@ -17,8 +18,6 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import * as yup from "yup";
-import { Formik } from "formik";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
@@ -60,7 +59,9 @@ import RouteIcon from "@mui/icons-material/Route";
 import LightIcon from "@mui/icons-material/Light";
 import ParkingIcon from "@mui/icons-material/LocalParking";
 import Footer from "../Footer/Footer";
-
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const Listing = () => {
   const amenities = [
     { id: 2, name: "Kitchen", icon: <KitchenIcon /> },
@@ -135,9 +136,11 @@ const Listing = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
   const [listing, setListing] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [users, setUsers] = useState([]);
+  const message = useRef("");
   const { id } = useParams();
   const [checkinDate, setCheckinDate] = useState(null);
   const [checkoutDate, setCheckoutDate] = useState(null);
@@ -149,10 +152,14 @@ const Listing = () => {
   }));
 
   useEffect(() => {
-    if(listings.results){
+    if (listings.results) {
       setListing(listings.results.filter((el) => el.id === id));
-    }else{
-      setListing((Object.values(listings).flat().filter((el)=>el.id===id)))
+    } else {
+      setListing(
+        Object.values(listings)
+          .flat()
+          .filter((el) => el.id === id)
+      );
     }
     const fetchOrders = async () => {
       const orders = await fetch(`http://localhost:9000/orders/${id}`);
@@ -184,7 +191,6 @@ const Listing = () => {
   // console.log(listing[0]);
   const handleSubmit = async () => {
     const token = user ? user.token : null;
-
     if (token) {
       const decodedToken = jwt_decode(token);
       const order = {
@@ -194,7 +200,7 @@ const Listing = () => {
         checkinDate: checkinDate,
         checkoutDate: checkoutDate,
       };
-
+      
       const orderPost = await fetch("http://localhost:9000/orders", {
         method: "POST",
         body: JSON.stringify(order),
@@ -203,8 +209,10 @@ const Listing = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      
       const res = await orderPost.json();
+      message.current = res.message;
+      setOpen(true);
     } else {
       navigate("/login");
     }
@@ -272,34 +280,59 @@ const Listing = () => {
               ))}
           </Swiper>
         </Container>
-        <Typography sx={{ fontSize: "28px", marginTop: 2, marginLeft:3 }}>
+        <Typography sx={{ fontSize: "28px", marginTop: 2, marginLeft: 3 }}>
           {listing[0]?.type}
         </Typography>
         <Typography
-          sx={{ fontSize: "20px", color: theme.palette.secondary.dark , marginLeft:3}}
+          sx={{
+            fontSize: "20px",
+            color: theme.palette.secondary.dark,
+            marginLeft: 3,
+          }}
         >
           Rooms
         </Typography>
         <Box sx={{ marginTop: 2 }}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={4}>
-              <Container sx={{border:'1px solid', padding:'15px', textAlign:'center'}}>
+              <Container
+                sx={{
+                  border: "1px solid",
+                  padding: "15px",
+                  textAlign: "center",
+                }}
+              >
                 <Typography>Bedrooms: {listing[0]?.bedrooms}</Typography>
               </Container>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Container sx={{border:'1px solid', padding:'15px', justifyContent:'center', display:'flex'}}>
-              <BathroomIcon/><Typography>: {listing[0]?.bedrooms}</Typography>
+              <Container
+                sx={{
+                  border: "1px solid",
+                  padding: "15px",
+                  justifyContent: "center",
+                  display: "flex",
+                }}
+              >
+                <BathroomIcon />
+                <Typography>: {listing[0]?.bedrooms}</Typography>
               </Container>
             </Grid>
             <Grid item xs={12} md={4}>
-              <Container sx={{border:'1px solid', padding:'15px', justifyContent:'center', display:'flex'}}>
-                <BedIcon/> <Typography>: {listing[0]?.bedrooms}</Typography>
+              <Container
+                sx={{
+                  border: "1px solid",
+                  padding: "15px",
+                  justifyContent: "center",
+                  display: "flex",
+                }}
+              >
+                <BedIcon /> <Typography>: {listing[0]?.bedrooms}</Typography>
               </Container>
             </Grid>
           </Grid>
         </Box>
-        <Grid container spacing={3} sx={{ marginTop: 3}}>
+        <Grid container spacing={3} sx={{ marginTop: 3 }}>
           <Grid item xs={12} md={6}>
             <Typography
               sx={{
@@ -371,6 +404,22 @@ const Listing = () => {
             </Card>
           </Grid>
         </Grid>
+        {open && (
+          <Snackbar
+            open={open}
+            autoHideDuration={2000}
+            onClose={() => setOpen(false)}
+          >
+            <Alert
+              severity={
+                message.current === "Booking successful!" ? "success" : "error"
+              }
+              sx={{ width: "100%" }}
+            >
+              {message.current}
+            </Alert>
+          </Snackbar>
+        )}
         <Box sx={{ marginTop: 2, marginLeft: 3 }}>
           <Typography
             sx={{
