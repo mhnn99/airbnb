@@ -163,7 +163,9 @@ useEffect(() => {
     dispatch(setListings({listings:updatedListings}));
   };
 
-
+  const openInNewTab = url => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
   return (
     <>
       {listings?.results?.length > 0 ? (
@@ -243,7 +245,7 @@ useEffect(() => {
                                 onClick={
                                   action.name === "Add to Favorites"
                                     ? () => addToFav(i)
-                                    : () => navigate(`/location/${listing.id}`)
+                                    : () => openInNewTab(`/location/${listing.id}`)
                                 }
                               />
                             ))}

@@ -78,7 +78,7 @@ const Account = () => {
   }, [groupedFavs]);
   console.log(listings)
 
-  const removeFav = async (index,id) => {
+  const removeFav = async (id) => {
     const token = userToken ? userToken : null;
     if (token) {
       dispatch(setRemoveFavs({ id: id }));
