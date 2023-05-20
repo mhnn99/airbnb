@@ -12,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import ButtonBase from "@mui/material/ButtonBase";
 import Grid from "@mui/material/Grid";
 
+
 const CatList = () => {
   const navigate = useNavigate();
   const cities = useSelector((state) => ({
@@ -83,7 +84,6 @@ const CatList = () => {
     transition: theme.transitions.create("opacity"),
   }));
 
-  
   const theme = useTheme();
 
   const transitions = useTransition(cities.cities, {
@@ -96,43 +96,44 @@ const CatList = () => {
   return (
     <>
       <Grid container spacing={4}>
-        
         {transitions((styles, item, t, index) => (
           <Grid item xs={12} sm={6} md={4} key={cities.initialArr[index]}>
-            {<animated.div style={styles}>
-              <ImageButton
-                focusRipple
-                style={{
-                  width: "100%",
-                }}
-                onClick={() =>
-                  navigate(`/locations/${cities.initialArr[index]}`)
-                }
-              >
-                <ImageSrc
+            {
+              <animated.div style={styles}>
+                <ImageButton
+                  focusRipple
                   style={{
-                    backgroundImage: `url(${item.photos[0].src.large})`,
+                    width: "100%",
                   }}
-                />
-                <ImageBackdrop className="MuiImageBackdrop-root" />
-                <Image>
-                  <Typography
-                    component="span"
-                    variant="subtitle1"
-                    color="inherit"
-                    sx={{
-                      position: "relative",
-                      p: 4,
-                      pt: 2,
-                      pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                  onClick={() =>
+                    navigate(`/locations/${cities.initialArr[index]}`)
+                  }
+                >
+                  <ImageSrc
+                    style={{
+                      backgroundImage: `url(${item.photos[0].src.large})`,
                     }}
-                  >
-                    {cities.initialArr[index]}
-                    <ImageMarked className="MuiImageMarked-root" />
-                  </Typography>
-                </Image>
-              </ImageButton>
-            </animated.div>}
+                  />
+                  <ImageBackdrop className="MuiImageBackdrop-root" />
+                  <Image>
+                    <Typography
+                      component="span"
+                      variant="subtitle1"
+                      color="inherit"
+                      sx={{
+                        position: "relative",
+                        p: 4,
+                        pt: 2,
+                        pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                      }}
+                    >
+                      {cities.initialArr[index]}
+                      <ImageMarked className="MuiImageMarked-root" />
+                    </Typography>
+                  </Image>
+                </ImageButton>
+              </animated.div>
+            }
           </Grid>
         ))}
       </Grid>
