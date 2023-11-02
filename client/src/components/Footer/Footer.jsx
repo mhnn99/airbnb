@@ -1,16 +1,11 @@
 import React from 'react';
-import cx from 'clsx';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-import Divider from '@material-ui/core/Divider';
+
 import Typography from '@material-ui/core/Typography';
-import { ColumnToRow, Row, Item } from '@mui-treasury/components/flex';
-import { NavMenu, NavItem } from '@mui-treasury/components/menu/navigation';
-import { usePlainNavigationMenuStyles } from '@mui-treasury/styles/navigationMenu/plain';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import TwitterIcon from '@mui/icons-material/Twitter';
+
 import { Paper } from '@mui/material';
 
 const useStyles = makeStyles(({ typography, palette, breakpoints }) => ({

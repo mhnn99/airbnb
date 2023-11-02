@@ -21,13 +21,12 @@ import jwt_decode from "jwt-decode";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import Footer from "../Footer/Footer";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import BackToTop from "../BackToTop/BackToTop";
-import CircularProgress from '@mui/material/CircularProgress';
-
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Listings = () => {
-  const [ isLoading, setIsLoading ] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const { city } = useParams();
   const navigate = useNavigate();
@@ -118,12 +117,12 @@ const Listings = () => {
 
   useEffect(() => {
     const fetchListings = async () => {
-      const url = `https://airbnb13.p.rapidapi.com/search-location?location=${city}&checkin=2023-09-16&checkout=2023-09-17&adults=1&children=0&infants=0&pets=0&page=1&currency=USD`;
+      const url = `https://airbnb13.p.rapidapi.com/search-location?location=${city}&checkin=2024-09-16&checkout=2024-09-17&adults=1&children=0&infants=0&pets=0&page=1&currency=USD`;
       const options = {
         method: "GET",
         headers: {
           "X-RapidAPI-Key":
-            "f6dfa6fc95msh3ea6d12e80670ecp18a7dfjsne8f981e298ac",
+            "ffe7cd812fmsh2f8be9ba6e3320ap1ecb01jsnd1f93aa48bb6",
           "X-RapidAPI-Host": "airbnb13.p.rapidapi.com",
         },
       };
@@ -135,51 +134,59 @@ const Listings = () => {
         dispatch(setListings({ listings: result }));
       } catch (error) {
         console.error(error);
-      } finally { 
+      } finally {
         setIsLoading(false);
       }
     };
     fetchListings();
   }, [city, dispatch]);
-  
+
   const priceFilterUp = () => {
-    const sorted = [...listings.results].sort((a, b) => a.price.rate - b.price.rate);
+    const sorted = [...listings.results].sort(
+      (a, b) => a.price.rate - b.price.rate
+    );
     const updatedListings = { ...listings, results: sorted };
-    dispatch(setListings({listings:updatedListings}));
-};
-useEffect(() => {
-  console.log(listings);
-}, [listings]);
+    dispatch(setListings({ listings: updatedListings }));
+  };
+
 
   const priceFilterDown = () => {
-    let sortDown = [...listings.results].sort((a,b)=>b.price.rate-a.price.rate)
+    let sortDown = [...listings.results].sort(
+      (a, b) => b.price.rate - a.price.rate
+    );
     const updatedListings = { ...listings, results: sortDown };
-    dispatch(setListings({listings:updatedListings}));
+    dispatch(setListings({ listings: updatedListings }));
   };
 
   const ratingFilterUp = () => {
-    let sortDown = [...listings.results].sort((a,b)=>a.rating-b.rating)
+    let sortDown = [...listings.results].sort((a, b) => a.rating - b.rating);
     const updatedListings = { ...listings, results: sortDown };
-    dispatch(setListings({listings:updatedListings}));
+    dispatch(setListings({ listings: updatedListings }));
   };
 
   const ratingFilterDown = () => {
-    let sortDown = [...listings.results].sort((a,b)=>b.rating-a.rating)
+    let sortDown = [...listings.results].sort((a, b) => b.rating - a.rating);
     const updatedListings = { ...listings, results: sortDown };
-    dispatch(setListings({listings:updatedListings}));
+    dispatch(setListings({ listings: updatedListings }));
   };
 
-  const openInNewTab = url => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+  const openInNewTab = (url) => {
+    window.open(url, "_blank", "noopener,noreferrer");
   };
   return (
     <>
       {isLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: 'center', height: '100vh' }}>
-          <CircularProgress color="inherit"/>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress color="inherit" />
         </Box>
-      ) : (
-      listings?.results?.length > 0 ? (
+      ) : listings?.results?.length > 0 ? (
         <>
           <Typography variant="h3" align="center" sx={{ m: 5 }}>
             {city.split("%20").join(" ").split("%2C").join(",")}, found{" "}
@@ -195,11 +202,15 @@ useEffect(() => {
               },
             }}
           >
-            <ButtonGroup variant="text" aria-label="text button group" color="inherit">
-              <Button onClick={()=>priceFilterUp()}>Price/night ↑</Button>
-              <Button onClick={()=>priceFilterDown()}>Price/night ↓</Button>
-              <Button onClick={()=>ratingFilterUp()}>Rating ↑</Button>
-              <Button onClick={()=>ratingFilterDown()}>Rating ↓</Button>
+            <ButtonGroup
+              variant="text"
+              aria-label="text button group"
+              color="inherit"
+            >
+              <Button onClick={() => priceFilterUp()}>Price/night ↑</Button>
+              <Button onClick={() => priceFilterDown()}>Price/night ↓</Button>
+              <Button onClick={() => ratingFilterUp()}>Rating ↑</Button>
+              <Button onClick={() => ratingFilterDown()}>Rating ↓</Button>
             </ButtonGroup>
           </Box>
           <Box
@@ -256,31 +267,30 @@ useEffect(() => {
                                 onClick={
                                   action.name === "Add to Favorites"
                                     ? () => addToFav(i)
-                                    : () => openInNewTab(`/location/${listing.id}`)
+                                    : () =>
+                                        openInNewTab(`/location/${listing.id}`)
                                 }
                               />
                             ))}
-
                       </SpeedDial>
-                        {open && (
-                          <Snackbar
-                            open={open}
-                            autoHideDuration={2000}
-                            onClose={() => setOpen(false)}
+                      {open && (
+                        <Snackbar
+                          open={open}
+                          autoHideDuration={2000}
+                          onClose={() => setOpen(false)}
+                        >
+                          <Alert
+                            severity={
+                              message.current === "Listing added to favorites!"
+                                ? "success"
+                                : "error"
+                            }
+                            sx={{ width: "100%" }}
                           >
-                            <Alert
-                              severity={
-                                message.current ===
-                                "Listing added to favorites!"
-                                  ? "success"
-                                  : "error"
-                              }
-                              sx={{ width: "100%" }}
-                            >
-                              {message.current}
-                            </Alert>
-                          </Snackbar>
-                        )}
+                            {message.current}
+                          </Alert>
+                        </Snackbar>
+                      )}
                       <CardMedia
                         sx={{ height: 200, position: "relative" }}
                         component="img"
@@ -341,14 +351,14 @@ useEffect(() => {
                 </Grid>
               ))}
             </Grid>
-            <BackToTop/>
+            <BackToTop />
           </Box>
         </>
       ) : (
         <Typography variant="h4" align="center" sx={{ m: 3 }}>
           No results found
         </Typography>
-      ))}
+      )}
       <footer className="footer">
         <Footer />
       </footer>

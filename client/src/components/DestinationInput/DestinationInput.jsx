@@ -26,7 +26,7 @@ const DestinationInput = () => {
     const options = {
       method: 'GET',
       headers: {
-        'X-RapidAPI-Key': 'f6dfa6fc95msh3ea6d12e80670ecp18a7dfjsne8f981e298ac',
+        'X-RapidAPI-Key': 'ffe7cd812fmsh2f8be9ba6e3320ap1ecb01jsnd1f93aa48bb6',
         'X-RapidAPI-Host': 'airbnb13.p.rapidapi.com'
       }
     };
